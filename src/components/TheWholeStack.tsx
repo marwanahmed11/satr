@@ -52,10 +52,10 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile viewport (<640px)
+  // Detect mobile/tablet viewport (<1024px)
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
+      setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -174,11 +174,11 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
     if (isThisActive) {
       // The active card detaches and floats right in front of the screen facing the camera!
-      // On mobile screens (<640px), keep translateZ and scale calibrated so the card never clips or overflows
+      // translateY(38px) balances the projection vertically so the top header and title are completely visible
       return {
         transform: isMobile
-          ? 'translateZ(40px) translateY(0px) rotateZ(36deg) rotateX(-56deg) scale(0.96)'
-          : 'translateZ(230px) translateY(28px) rotateZ(36deg) rotateX(-56deg) scale(1.08)',
+          ? 'translateZ(50px) translateY(38px) rotateZ(36deg) rotateX(-56deg) scale(0.96)'
+          : 'translateZ(180px) translateY(38px) rotateZ(36deg) rotateX(-56deg) scale(1.04)',
         zIndex: 50,
         opacity: 1,
         filter: 'none',
@@ -471,7 +471,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-[400px] min-[390px]:h-[440px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none"
+              className="relative w-full h-[460px] min-[390px]:h-[480px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none"
             >
               
               {/* Ambient 3D ground grid circle */}
@@ -489,7 +489,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg)`,
                 }}
-                className="relative w-[270px] min-[390px]:w-[305px] sm:w-[380px] h-[260px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.80] min-[390px]:scale-[0.88] sm:scale-100"
+                className="relative w-[270px] min-[390px]:w-[305px] sm:w-[380px] h-[260px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.82] min-[390px]:scale-[0.90] sm:scale-100"
               >
                 
                 {/* ===================================================
