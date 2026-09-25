@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, ArrowRight, ArrowLeft, Play, Pause } from 'lucide-react';
 
 interface Stage {
   num: string;
@@ -70,10 +70,34 @@ const stages: Stage[] = [
   },
 ];
 
+const STAGE_DURATION_MS = 3800;
+
 export function HowWeWork() {
   const { t, lang } = useLanguage();
-  // Default to step 2 (Build) so steps 0, 1, 2 are filled and 3, 4 are light, exactly matching reference image
-  const [activeStage, setActiveStage] = useState<number>(2);
+  const isRTL = lang === 'ar';
+
+  // Start at step 0 (Idea) matching user reference image
+  const [activeStage, setActiveStage] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [progressKey, setProgressKey] = useState<number>(0);
+
+  // Auto-advance timer
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      setActiveStage((prev) => (prev + 1) % stages.length);
+      setProgressKey((prev) => prev + 1);
+    }, STAGE_DURATION_MS);
+
+    return () => clearInterval(timer);
+  }, [isPaused, activeStage]);
+
+  // Jump to specific step and reset the timer
+  const handleSelectStage = (idx: number) => {
+    setActiveStage(idx);
+    setProgressKey((prev) => prev + 1);
+  };
 
   const current = stages[activeStage];
 
@@ -132,25 +156,51 @@ export function HowWeWork() {
   };
 
   return (
-    <section className="py-20 sm:py-24 bg-white" id="process">
+    <section 
+      className="py-20 sm:py-24 bg-white" 
+      id="process"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="w-full max-w-5xl mx-auto px-6 sm:px-8">
         
-        {/* Exact Section Label Matching User Reference Image */}
-        <div className="mb-10 text-left rtl:text-right">
-          <span className="font-mono text-xs font-semibold text-[#0EA5E9] tracking-[0.22em] uppercase inline-block">
-            {t('process.label')}
-          </span>
+        {/* Header Label & Autoplay Status */}
+        <div className="mb-10 flex items-center justify-between">
+          <div className="text-left rtl:text-right">
+            <span className="font-mono text-xs font-semibold text-[#0EA5E9] tracking-[0.22em] uppercase inline-block">
+              {t('process.label')}
+            </span>
+          </div>
+
+          {/* Autoplay Controls Indicator */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsPaused((prev) => !prev)}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F9FF] border border-[#BAE6FD] text-[#0369A1] hover:bg-[#E0F2FE] transition-colors text-xs font-mono cursor-pointer"
+              title={isPaused ? "Resume automatic cycling" : "Pause automatic cycling"}
+            >
+              {isPaused ? <Play size={11} className="text-[#0EA5E9]" /> : <Pause size={11} className="text-[#0EA5E9]" />}
+              <span>{isPaused ? (isRTL ? 'إيقاف مؤقت' : 'Paused') : (isRTL ? 'تشغيل تلقائي' : 'Auto-cycling')}</span>
+              {!isPaused && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] animate-ping" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Clean Horizontal Connected Stepper (100% faithful to reference mockup) */}
         <div className="relative mb-14">
           
           {/* Continuous Connecting Line Running Behind All Icons */}
-          <div className="absolute top-[28px] sm:top-[30px] left-[28px] sm:left-[30px] right-[28px] sm:right-[30px] h-[2px] bg-[#BAE6FD] z-0">
+          <div className="absolute top-[28px] sm:top-[30px] left-[28px] sm:left-[30px] right-[28px] sm:right-[30px] h-[2px] bg-[#BAE6FD] z-0 overflow-hidden">
             {/* Animated progression track matching active selection */}
             <div 
-              style={{ width: `${(activeStage / (stages.length - 1)) * 100}%` }}
-              className="h-full bg-gradient-to-r from-[#0EA5E9] to-[#0284C7] transition-all duration-400 ease-out"
+              style={{ 
+                width: `${(activeStage / (stages.length - 1)) * 100}%`,
+                transformOrigin: isRTL ? 'right' : 'left'
+              }}
+              className="h-full bg-gradient-to-r from-[#0EA5E9] to-[#0284C7] transition-all duration-500 ease-out"
             />
           </div>
 
@@ -163,26 +213,31 @@ export function HowWeWork() {
               return (
                 <div 
                   key={stage.key}
-                  onClick={() => setActiveStage(idx)}
+                  onClick={() => handleSelectStage(idx)}
                   className="flex flex-col items-center group cursor-pointer focus:outline-none"
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
-                      setActiveStage(idx);
+                      handleSelectStage(idx);
                     }
                   }}
                   aria-label={`${t(stage.key)} - Step ${stage.num}`}
                 >
                   {/* Rounded Square Button Badge */}
                   <div 
-                    className={`w-[54px] h-[54px] sm:w-[60px] sm:h-[60px] rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                    className={`relative w-[54px] h-[54px] sm:w-[60px] sm:h-[60px] rounded-2xl flex items-center justify-center transition-all duration-300 ${
                       isFilled
                         ? 'bg-[#0EA5E9] text-white shadow-[0_6px_18px_-2px_rgba(14,165,233,0.4)] hover:brightness-105 hover:scale-105'
                         : 'bg-[#E0F2FE] text-[#0EA5E9] hover:bg-[#BAE6FD] hover:scale-105'
-                    } ${isCurrent ? 'ring-4 ring-[#BAE6FD]/60 scale-105' : ''}`}
+                    } ${isCurrent ? 'ring-4 ring-[#BAE6FD]/80 scale-105 shadow-[0_8px_24px_-2px_rgba(14,165,233,0.5)]' : ''}`}
                   >
                     {renderStepIcon(idx, isFilled)}
+
+                    {/* Subtle pulse ring on the currently active step */}
+                    {isCurrent && !isPaused && (
+                      <span className="absolute -inset-1 rounded-2xl border-2 border-[#0EA5E9]/40 animate-ping pointer-events-none" />
+                    )}
                   </div>
 
                   {/* Stage Label Below Badge */}
@@ -203,7 +258,21 @@ export function HowWeWork() {
         </div>
 
         {/* Interactive Deliverables Card for Currently Selected Stage */}
-        <div className="rounded-2xl border border-[#D6E6F2] bg-gradient-to-br from-[#FFFFFF] to-[#F5FAFF] p-6 sm:p-8 shadow-[0_14px_30px_-20px_rgba(12,74,110,0.35)] transition-all duration-300">
+        <div 
+          key={activeStage}
+          className="relative rounded-2xl border border-[#D6E6F2] bg-gradient-to-br from-[#FFFFFF] to-[#F5FAFF] p-6 sm:p-8 shadow-[0_14px_30px_-20px_rgba(12,74,110,0.35)] transition-all duration-300 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300"
+        >
+          {/* Top Progress countdown bar indicating auto-advance */}
+          {!isPaused && (
+            <div 
+              key={`bar-${progressKey}`}
+              style={{
+                animation: `stageProgress ${STAGE_DURATION_MS}ms linear forwards`
+              }}
+              className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#0EA5E9] to-[#0284C7] origin-left"
+            />
+          )}
+
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-5 border-b border-[#E0F2FE]">
             <div className="flex items-center gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-[#0EA5E9] text-white flex items-center justify-center shadow-sm">
@@ -247,22 +316,19 @@ export function HowWeWork() {
           {/* Stepper Navigation Controls */}
           <div className="mt-6 pt-5 border-t border-[#E0F2FE] flex justify-between items-center text-xs font-mono text-[#3F7FA8]">
             <button
-              onClick={() => setActiveStage((prev) => Math.max(0, prev - 1))}
-              disabled={activeStage === 0}
-              className={`flex items-center gap-1.5 hover:text-[#0EA5E9] transition-colors ${
-                activeStage === 0 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
-              }`}
+              onClick={() => handleSelectStage((activeStage - 1 + stages.length) % stages.length)}
+              className="flex items-center gap-1.5 hover:text-[#0EA5E9] transition-colors cursor-pointer"
             >
-              {lang === 'ar' ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
-              <span>{lang === 'ar' ? 'الخطوة السابقة' : 'PREVIOUS STEP'}</span>
+              {isRTL ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
+              <span>{isRTL ? 'الخطوة السابقة' : 'PREVIOUS STEP'}</span>
             </button>
 
             <div className="flex gap-1.5">
               {stages.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveStage(i)}
-                  className={`h-2 rounded-full transition-all ${
+                  onClick={() => handleSelectStage(i)}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${
                     activeStage === i ? 'w-6 bg-[#0EA5E9]' : 'w-2 bg-[#BAE6FD]'
                   }`}
                   aria-label={`Jump to stage ${i + 1}`}
@@ -271,20 +337,29 @@ export function HowWeWork() {
             </div>
 
             <button
-              onClick={() => setActiveStage((prev) => Math.min(stages.length - 1, prev + 1))}
-              disabled={activeStage === stages.length - 1}
-              className={`flex items-center gap-1.5 hover:text-[#0EA5E9] transition-colors ${
-                activeStage === stages.length - 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
-              }`}
+              onClick={() => handleSelectStage((activeStage + 1) % stages.length)}
+              className="flex items-center gap-1.5 hover:text-[#0EA5E9] transition-colors cursor-pointer"
             >
-              <span>{lang === 'ar' ? 'الخطوة التالية' : 'NEXT STEP'}</span>
-              {lang === 'ar' ? <ArrowLeft size={14} /> : <ArrowRight size={14} />}
+              <span>{isRTL ? 'الخطوة التالية' : 'NEXT STEP'}</span>
+              {isRTL ? <ArrowLeft size={14} /> : <ArrowRight size={14} />}
             </button>
           </div>
 
         </div>
 
       </div>
+
+      {/* Embedded Keyframes for Progress Bar */}
+      <style jsx>{`
+        @keyframes stageProgress {
+          0% {
+            width: 0%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+      `}</style>
     </section>
   );
 }

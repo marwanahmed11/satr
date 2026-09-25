@@ -93,14 +93,6 @@ export default function HomePage() {
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-12 flex-1 flex items-center">
           <div className="max-w-[540px] animate-in fade-in slide-in-from-bottom-4 duration-900 delay-200">
             
-            {/* Live Glass Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 glass-pill text-xs font-medium text-[#0C4A6E] mb-6 shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-pulse-ring absolute inline-flex h-full w-full rounded-full bg-[#0EA5E9]" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0EA5E9]" />
-              </span>
-              <span>{t('hero.badge')}</span>
-            </div>
 
             {/* Headline */}
             <h1 className="text-5xl sm:text-7xl lg:text-[80px] font-medium tracking-[-0.05em] leading-[1.0] text-[#0C4A6E] mb-5">
