@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Server, 
@@ -8,12 +8,12 @@ import {
   Palette, 
   ArrowRight, 
   ArrowUpRight, 
-  Layers, 
   RotateCcw, 
   Sparkles, 
   CheckCircle2, 
   X,
-  ExternalLink
+  ExternalLink,
+  Layers
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -57,23 +57,23 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
       layerNum: '03',
       subTitle: isRTL ? 'الواجهة والتجربة' : 'EXPERIENCE & UI',
       name: t('stack.design'),
-      techSummary: 'UI/UX · Motion · Design Systems · Conversion · Figma · Three.js',
+      techSummary: 'UI/UX · Motion · Design Systems · Conversion · Figma',
       divisionHref: '/services/web',
       metricsBadge: 'PIXEL-PERFECT FIGMA',
       colorScheme: {
-        bg: 'bg-white/95 backdrop-blur-xl',
+        bg: 'bg-white',
         border: 'border-2 border-[#7DD3FC] hover:border-[#0EA5E9]',
         textPrimary: 'text-[#0C4A6E]',
         textSecondary: 'text-[#3F7FA8]',
         badgeBg: 'bg-[#F0F9FF] border-[#BAE6FD]',
         badgeText: 'text-[#0284C7]',
-        glow: 'rgba(14, 165, 233, 0.45)',
+        glow: 'rgba(14, 165, 233, 0.4)',
         accent: '#0EA5E9'
       },
       keySpecs: [
         'Atomic Design Systems',
         '60 FPS Micro-Interactions',
-        'Full Figma Handshake',
+        'Figma Design Tokens',
         'WCAG AA Accessibility'
       ],
       description: isRTL 
@@ -85,23 +85,23 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
       layerNum: '02',
       subTitle: isRTL ? 'المنطق والتوسع' : 'LOGIC & SCALING',
       name: t('stack.code'),
-      techSummary: 'Next.js · TypeScript · AI Models · Custom CRM · APIs · GraphQL',
+      techSummary: 'Next.js · TypeScript · AI Models · Custom CRM · APIs',
       divisionHref: '/services/software',
       metricsBadge: 'CLEAN ARCHITECTURE',
       colorScheme: {
         bg: 'bg-gradient-to-br from-[#0284C7] via-[#0369A1] to-[#0C4A6E]',
-        border: 'border-2 border-white/70 hover:border-white',
+        border: 'border-2 border-white/80 hover:border-white',
         textPrimary: 'text-white',
         textSecondary: 'text-[#BAE6FD]',
         badgeBg: 'bg-white/20 border-white/30',
         badgeText: 'text-white',
-        glow: 'rgba(14, 165, 233, 0.65)',
+        glow: 'rgba(14, 165, 233, 0.6)',
         accent: '#38BDF8'
       },
       keySpecs: [
         'End-to-End TypeScript',
-        'Custom LLMs & Neural Integrations',
-        'Sub-second Edge Hydration',
+        'Custom LLM Integrations',
+        'Edge Hydration & Turbopack',
         'Modular Clean Architecture'
       ],
       description: isRTL
@@ -113,23 +113,23 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
       layerNum: '01',
       subTitle: isRTL ? 'البنية التحتية والأساس' : 'FOUNDATION & CLOUD',
       name: t('stack.infra'),
-      techSummary: 'AWS · Cloudflare · High-Throughput APIs · DevOps · Multi-Region',
+      techSummary: 'AWS · Cloudflare · High-Throughput APIs · DevOps',
       divisionHref: '/services/cloud',
       metricsBadge: '99.99% UPTIME SLA',
       colorScheme: {
         bg: 'bg-gradient-to-br from-[#082F49] via-[#0C4A6E] to-[#041926]',
-        border: 'border-2 border-[#38BDF8]/40 hover:border-[#38BDF8]',
+        border: 'border-2 border-[#38BDF8]/50 hover:border-[#38BDF8]',
         textPrimary: 'text-white',
         textSecondary: 'text-[#7DD3FC]',
         badgeBg: 'bg-[#082f49] border-[#38BDF8]/30',
         badgeText: 'text-[#7DD3FC]',
-        glow: 'rgba(56, 189, 248, 0.55)',
+        glow: 'rgba(56, 189, 248, 0.5)',
         accent: '#7DD3FC'
       },
       keySpecs: [
         'Global Edge Routing & CDN',
-        'Zero-Downtime Automated CI/CD',
-        'Automated Failover & Multi-Region',
+        'Automated Zero-Downtime CI/CD',
+        'Multi-Region Failover',
         '<50ms P99 Database Latency'
       ],
       description: isRTL
@@ -153,8 +153,8 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   };
 
   // Base 3D Angles
-  const baseRotateX = 56 + mouseTilt.y * 5;
-  const baseRotateZ = -36 + mouseTilt.x * 5;
+  const baseRotateX = 56 + mouseTilt.y * 4;
+  const baseRotateZ = -36 + mouseTilt.x * 4;
 
   // Calculate 3D transforms for each card
   const getCardTransform = (layerId: LayerId) => {
@@ -163,34 +163,35 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
     if (isThisActive) {
       // The active card detaches and floats right in front of the screen facing the camera!
+      // translateY(45px) balances the projection so it stays vertically centered in the viewport
       return {
-        transform: `translateZ(270px) rotateZ(36deg) rotateX(-56deg) translateY(-18px) scale(1.16)`,
+        transform: 'translateZ(230px) translateY(45px) rotateZ(36deg) rotateX(-56deg) scale(1.1)',
         zIndex: 50,
         opacity: 1,
         filter: 'none',
-        boxShadow: `0 45px 85px -15px ${
+        boxShadow: `0 35px 70px -15px ${
           layerId === 'design' 
-            ? 'rgba(12,74,110,0.55)' 
+            ? 'rgba(12,74,110,0.45)' 
             : layerId === 'code' 
-              ? 'rgba(14,165,233,0.7)' 
-              : 'rgba(8,47,73,0.85)'
-        }, 0 0 35px rgba(56, 189, 248, 0.45)`,
+              ? 'rgba(14,165,233,0.6)' 
+              : 'rgba(8,47,73,0.75)'
+        }, 0 0 30px rgba(56, 189, 248, 0.35)`,
       };
     }
 
     if (isAnyActive) {
-      // Other cards gently step back and softly blur to emphasize front depth
+      // Background cards sink back, dim, and blur to emphasize front depth
       let restZ = 0;
-      if (layerId === 'design') restZ = 60;
-      if (layerId === 'code') restZ = 30;
+      if (layerId === 'design') restZ = 40;
+      if (layerId === 'code') restZ = 20;
       if (layerId === 'infra') restZ = 0;
 
       return {
-        transform: `translateZ(${restZ}px) scale(0.92)`,
+        transform: `translateZ(${restZ}px) scale(0.9)`,
         zIndex: layerId === 'design' ? 30 : layerId === 'code' ? 20 : 10,
         opacity: 0.35,
-        filter: 'blur(1.5px)',
-        boxShadow: '0 20px 35px -15px rgba(12,74,110,0.3)',
+        filter: 'blur(1px)',
+        boxShadow: '0 20px 35px -15px rgba(12,74,110,0.2)',
       };
     }
 
@@ -199,8 +200,8 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     let z = 0;
     if (isExploded) {
       if (layerId === 'infra') z = -20;
-      if (layerId === 'code') z = 130;
-      if (layerId === 'design') z = 280;
+      if (layerId === 'code') z = 120;
+      if (layerId === 'design') z = 260;
     } else {
       if (layerId === 'infra') z = 0;
       if (layerId === 'code') z = 95;
@@ -208,17 +209,17 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     }
 
     if (isHovered) {
-      z += 28;
+      z += 24;
     }
 
     return {
-      transform: `translateZ(${z}px) scale(${isHovered ? 1.05 : 1})`,
+      transform: `translateZ(${z}px) scale(${isHovered ? 1.04 : 1})`,
       zIndex: layerId === 'design' ? 30 : layerId === 'code' ? 20 : 10,
       opacity: 1,
       filter: 'none',
       boxShadow: isHovered 
-        ? '0 50px 75px -15px rgba(12,74,110,0.65)' 
-        : '0 35px 50px -15px rgba(12,74,110,0.45)',
+        ? '0 45px 65px -15px rgba(12,74,110,0.6)' 
+        : '0 30px 45px -15px rgba(12,74,110,0.4)',
     };
   };
 
@@ -248,7 +249,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
             </p>
 
             {/* Dynamic Architecture Spec Box based on Active 3D Selection */}
-            <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-[0_15px_30px_-15px_rgba(12,74,110,0.1)] mb-7 transition-all duration-300">
+            <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-[0_15px_30px_-15px_rgba(12,74,110,0.08)] mb-6 transition-all duration-300">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-mono text-xs text-[#0369A1] uppercase tracking-wider font-semibold flex items-center gap-1.5">
                   <Sparkles size={14} className="text-[#0EA5E9]" />
@@ -261,7 +262,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 {activeLayer && (
                   <button
                     onClick={() => setActiveLayer(null)}
-                    className="text-[11px] font-mono text-[#0284C7] hover:underline flex items-center gap-1"
+                    className="text-[11px] font-mono text-[#0EA5E9] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>Stack View</span>
                     <RotateCcw size={11} />
@@ -272,11 +273,10 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               <p className="text-xs text-[#0C4A6E] leading-relaxed mb-3">
                 {activeData 
                   ? activeData.description
-                  : 'Touch any card or click the interactive 3D buttons to bring each layer directly in front of the screen with detailed specifications.'
+                  : 'Touch any card on the right or click the buttons below to inspect each layer in full 3D with architectural specifications.'
                 }
               </p>
 
-              {/* Dynamic specs bullet points when a layer is inspected */}
               {activeData ? (
                 <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E0F2FE]">
                   {activeData.keySpecs.map((spec, i) => (
@@ -292,6 +292,68 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                   <span>Click any card in the 3D stack to pop out</span>
                 </div>
               )}
+            </div>
+
+            {/* Clean Layer Controller Bar in Left Column (Never overlaps the 3D canvas) */}
+            <div className="p-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-7">
+              <div className="flex items-center justify-between mb-2 px-1">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[#0369A1] font-medium">
+                  3D LAYER CONTROLS:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveLayer(null);
+                    setIsExploded(!isExploded);
+                  }}
+                  className="text-[11px] font-mono text-[#3F7FA8] hover:text-[#0C4A6E] flex items-center gap-1 cursor-pointer"
+                  title="Toggle exploded 3D spacing"
+                >
+                  <Layers size={12} />
+                  <span>{isExploded && !activeLayer ? 'Compact Deck' : 'Explode 3D'}</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
+                  className={`py-2 px-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                    activeLayer === 'design'
+                      ? 'bg-[#0EA5E9] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                  }`}
+                >
+                  <Palette size={13} />
+                  <span>03 Design</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
+                  className={`py-2 px-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                    activeLayer === 'code'
+                      ? 'bg-[#0284C7] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                  }`}
+                >
+                  <Brackets size={13} />
+                  <span>02 Code</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
+                  className={`py-2 px-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                    activeLayer === 'infra'
+                      ? 'bg-[#0C4A6E] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                  }`}
+                >
+                  <Server size={13} />
+                  <span>01 Infra</span>
+                </button>
+              </div>
             </div>
 
             {/* Quick Actions */}
@@ -323,89 +385,19 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
           </div>
 
           {/* =======================================================
-              Right Column: Interactive 3D Stack Stage
+              Right Column: Unobstructed 3D Stack Stage
              ======================================================= */}
-          <div className="lg:col-span-7 flex flex-col items-center">
+          <div className="lg:col-span-7 flex flex-col items-center justify-center">
             
-            {/* 3D Mode & Layer Selector Buttons */}
-            <div className="w-full flex flex-wrap items-center justify-center gap-2 mb-6 z-20">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#3F7FA8] me-1 hidden sm:inline-block">
-                3D FOCUS:
-              </span>
-
-              {/* Layer 03 Design Button */}
-              <button
-                type="button"
-                onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-xs ${
-                  activeLayer === 'design'
-                    ? 'bg-[#0EA5E9] text-white shadow-[0_8px_20px_-6px_rgba(14,165,233,0.7)] scale-105'
-                    : 'bg-white/80 hover:bg-white text-[#0C4A6E] border border-[#BAE6FD]'
-                }`}
-                title="Bring Design layer 3D in front of screen"
-              >
-                <Palette size={13} />
-                <span>03 Design</span>
-              </button>
-
-              {/* Layer 02 Code Button */}
-              <button
-                type="button"
-                onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-xs ${
-                  activeLayer === 'code'
-                    ? 'bg-[#0284C7] text-white shadow-[0_8px_20px_-6px_rgba(2,132,199,0.7)] scale-105'
-                    : 'bg-white/80 hover:bg-white text-[#0C4A6E] border border-[#BAE6FD]'
-                }`}
-                title="Bring Code layer 3D in front of screen"
-              >
-                <Brackets size={13} />
-                <span>02 Code</span>
-              </button>
-
-              {/* Layer 01 Infra Button */}
-              <button
-                type="button"
-                onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-xs ${
-                  activeLayer === 'infra'
-                    ? 'bg-[#0C4A6E] text-white shadow-[0_8px_20px_-6px_rgba(12,74,110,0.7)] scale-105'
-                    : 'bg-white/80 hover:bg-white text-[#0C4A6E] border border-[#BAE6FD]'
-                }`}
-                title="Bring Infrastructure layer 3D in front of screen"
-              >
-                <Server size={13} />
-                <span>01 Infra</span>
-              </button>
-
-              {/* Exploded / Compact Toggle */}
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveLayer(null);
-                  setIsExploded((prev) => !prev);
-                }}
-                className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
-                  isExploded && !activeLayer
-                    ? 'bg-[#E0F2FE] text-[#0369A1] border border-[#7DD3FC]'
-                    : 'bg-transparent text-[#3F7FA8] hover:text-[#0C4A6E]'
-                }`}
-                title="Explode 3D layer spacing"
-              >
-                <Layers size={13} />
-                <span className="text-[11px]">{isExploded ? 'Compact' : 'Explode 3D'}</span>
-              </button>
-            </div>
-
             {/* 3D Viewport Container */}
             <div 
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-[470px] sm:h-[540px] flex items-center justify-center [perspective:1400px] select-none"
+              className="relative w-full h-[480px] sm:h-[550px] flex items-center justify-center [perspective:1400px] select-none"
             >
               
-              {/* Subtle ambient 3D ground grid circle */}
+              {/* Ambient 3D ground grid circle */}
               <div 
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg) translateZ(-40px)`,
@@ -415,12 +407,12 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 <div className="w-[300px] h-[300px] rounded-full border border-[#E0F2FE]/60" />
               </div>
 
-              {/* Isometric 3D Preserve-3D Stage */}
+              {/* Isometric 3D Stage */}
               <div 
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg)`,
                 }}
-                className="relative w-[320px] sm:w-[370px] h-[220px] sm:h-[230px] [transform-style:preserve-3d] transition-transform duration-500 ease-out"
+                className="relative w-[330px] sm:w-[380px] h-[240px] sm:h-[250px] [transform-style:preserve-3d] transition-transform duration-500 ease-out"
               >
                 
                 {/* ===================================================
@@ -455,14 +447,14 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                               LAYER {card.layerNum} · {card.subTitle}
                             </span>
                             {isFront && (
-                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] text-[9px] font-mono">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] text-[9px] font-mono font-medium">
                                 <span className="h-1.5 w-1.5 rounded-full bg-[#38BDF8] animate-ping" />
                                 3D IN FOCUS
                               </span>
                             )}
                           </div>
                           
-                          <span className="text-xl sm:text-2xl font-medium text-white tracking-tight block mt-0.5 group-hover:text-[#BAE6FD] transition-colors">
+                          <span className="text-xl sm:text-2xl font-medium text-white tracking-tight block mt-1 group-hover:text-[#BAE6FD] transition-colors">
                             {card.name}
                           </span>
                           
@@ -472,30 +464,27 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                         </div>
 
                         <div className="w-10 h-10 rounded-xl bg-[#082f49] flex items-center justify-center text-[#7DD3FC] border border-[#BAE6FD]/20 group-hover:border-[#38BDF8] transition-colors shrink-0 ms-2">
-                          <Server size={22} />
+                          <Server size={20} />
                         </div>
                       </div>
 
-                      {/* Expanded In-Front Content */}
-                      {isFront ? (
-                        <div className="my-2 p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-[#BAE6FD] space-y-1.5 animate-in fade-in zoom-in-95 duration-300">
-                          <div className="flex items-center justify-between text-[11px] font-mono text-[#7DD3FC]">
-                            <span>ARCHITECTURAL SPECS</span>
-                            <span>SUB-50MS LATENCY</span>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5 pt-1">
+                      {/* Middle: Expanded In-Front Content */}
+                      {isFront && (
+                        <div className="my-2 p-2.5 rounded-xl bg-white/10 border border-white/15 text-xs text-[#BAE6FD] animate-in fade-in duration-300">
+                          <div className="grid grid-cols-2 gap-1.5">
                             {card.keySpecs.map((spec, i) => (
-                              <span key={i} className="px-2 py-0.5 rounded-md bg-[#0C4A6E]/80 border border-[#38BDF8]/30 text-[10px] text-white">
-                                {spec}
-                              </span>
+                              <div key={i} className="flex items-center gap-1.5 text-[10px] text-white">
+                                <CheckCircle2 size={11} className="text-[#38BDF8] shrink-0" />
+                                <span className="truncate">{spec}</span>
+                              </div>
                             ))}
                           </div>
                         </div>
-                      ) : null}
+                      )}
 
                       {/* Bottom Footer / Action Bar */}
-                      <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono text-[#7DD3FC]">
-                        <span className="flex items-center gap-1.5">
+                      <div className="flex items-center justify-between pt-2.5 border-t border-white/10 text-xs font-mono text-[#7DD3FC]">
+                        <span className="flex items-center gap-1.5 text-[11px]">
                           <span className="w-2 h-2 rounded-full bg-[#38BDF8] inline-block" />
                           <span>{card.metricsBadge}</span>
                         </span>
@@ -516,7 +505,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                                 e.stopPropagation();
                                 setActiveLayer(null);
                               }}
-                              className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                              className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                               title="Return to Stack"
                             >
                               <X size={14} />
@@ -524,7 +513,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                           </div>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[11px] text-[#BAE6FD] group-hover:text-white group-hover:translate-x-1 transition-all">
-                            <span>{hoveredLayer === 'infra' ? 'Bring to Front ✦' : 'Enter Division'}</span>
+                            <span>Enter Division</span>
                             <ArrowUpRight size={14} />
                           </span>
                         )}
@@ -565,14 +554,14 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                               LAYER {card.layerNum} · {card.subTitle}
                             </span>
                             {isFront && (
-                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-mono">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-mono font-medium">
                                 <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
                                 3D IN FOCUS
                               </span>
                             )}
                           </div>
 
-                          <span className="text-xl sm:text-2xl font-medium text-white tracking-tight block mt-0.5">
+                          <span className="text-xl sm:text-2xl font-medium text-white tracking-tight block mt-1">
                             {card.name}
                           </span>
 
@@ -582,30 +571,27 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                         </div>
 
                         <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white border border-white/30 group-hover:bg-white/30 transition-colors shrink-0 ms-2">
-                          <Brackets size={22} />
+                          <Brackets size={20} />
                         </div>
                       </div>
 
-                      {/* Expanded In-Front Content */}
-                      {isFront ? (
-                        <div className="my-2 p-2.5 rounded-xl bg-black/15 border border-white/20 text-xs text-white space-y-1.5 animate-in fade-in zoom-in-95 duration-300">
-                          <div className="flex items-center justify-between text-[11px] font-mono text-[#BAE6FD]">
-                            <span>SOFTWARE CAPABILITIES</span>
-                            <span>100% TYPE-SAFE</span>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5 pt-1">
+                      {/* Middle: Expanded In-Front Content */}
+                      {isFront && (
+                        <div className="my-2 p-2.5 rounded-xl bg-black/15 border border-white/20 text-xs text-white animate-in fade-in duration-300">
+                          <div className="grid grid-cols-2 gap-1.5">
                             {card.keySpecs.map((spec, i) => (
-                              <span key={i} className="px-2 py-0.5 rounded-md bg-white/20 border border-white/30 text-[10px] text-white">
-                                {spec}
-                              </span>
+                              <div key={i} className="flex items-center gap-1.5 text-[10px] text-white">
+                                <CheckCircle2 size={11} className="text-[#38BDF8] shrink-0" />
+                                <span className="truncate">{spec}</span>
+                              </div>
                             ))}
                           </div>
                         </div>
-                      ) : null}
+                      )}
 
                       {/* Bottom Footer / Action Bar */}
-                      <div className="flex items-center justify-between pt-3 border-t border-white/20 text-xs font-mono text-white/90">
-                        <span className="flex items-center gap-1.5">
+                      <div className="flex items-center justify-between pt-2.5 border-t border-white/20 text-xs font-mono text-white/90">
+                        <span className="flex items-center gap-1.5 text-[11px]">
                           <span className="w-2 h-2 rounded-full bg-white inline-block" />
                           <span>{card.metricsBadge}</span>
                         </span>
@@ -626,7 +612,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                                 e.stopPropagation();
                                 setActiveLayer(null);
                               }}
-                              className="p-1 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
+                              className="p-1 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
                               title="Return to Stack"
                             >
                               <X size={14} />
@@ -634,7 +620,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                           </div>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[11px] text-white group-hover:translate-x-1 transition-all">
-                            <span>{hoveredLayer === 'code' ? 'Bring to Front ✦' : 'Enter Division'}</span>
+                            <span>Enter Division</span>
                             <ArrowUpRight size={14} />
                           </span>
                         )}
@@ -675,14 +661,14 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                               LAYER {card.layerNum} · {card.subTitle}
                             </span>
                             {isFront && (
-                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[9px] font-mono">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[9px] font-mono font-medium">
                                 <span className="h-1.5 w-1.5 rounded-full bg-[#0EA5E9] animate-ping" />
                                 3D IN FOCUS
                               </span>
                             )}
                           </div>
 
-                          <span className="text-xl sm:text-2xl font-medium text-[#0C4A6E] tracking-tight block mt-0.5 group-hover:text-[#0EA5E9] transition-colors">
+                          <span className="text-xl sm:text-2xl font-medium text-[#0C4A6E] tracking-tight block mt-1 group-hover:text-[#0EA5E9] transition-colors">
                             {card.name}
                           </span>
 
@@ -701,26 +687,23 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                         </div>
                       </div>
 
-                      {/* Expanded In-Front Content */}
-                      {isFront ? (
-                        <div className="my-2 p-2.5 rounded-xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs text-[#0C4A6E] space-y-1.5 animate-in fade-in zoom-in-95 duration-300">
-                          <div className="flex items-center justify-between text-[11px] font-mono text-[#0284C7]">
-                            <span>DESIGN SYSTEM SPECS</span>
-                            <span>60 FPS MOTION</span>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5 pt-1">
+                      {/* Middle: Expanded In-Front Content */}
+                      {isFront && (
+                        <div className="my-2 p-2.5 rounded-xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs text-[#0C4A6E] animate-in fade-in duration-300">
+                          <div className="grid grid-cols-2 gap-1.5">
                             {card.keySpecs.map((spec, i) => (
-                              <span key={i} className="px-2 py-0.5 rounded-md bg-white border border-[#BAE6FD] text-[10px] text-[#0369A1]">
-                                {spec}
-                              </span>
+                              <div key={i} className="flex items-center gap-1.5 text-[10px] text-[#0369A1]">
+                                <CheckCircle2 size={11} className="text-[#0EA5E9] shrink-0" />
+                                <span className="truncate">{spec}</span>
+                              </div>
                             ))}
                           </div>
                         </div>
-                      ) : null}
+                      )}
 
                       {/* Bottom Footer / Action Bar */}
-                      <div className="flex items-center justify-between pt-3 border-t border-[#E0F2FE] text-xs font-mono text-[#0EA5E9]">
-                        <span className="flex items-center gap-1.5">
+                      <div className="flex items-center justify-between pt-2.5 border-t border-[#E0F2FE] text-xs font-mono text-[#0EA5E9]">
+                        <span className="flex items-center gap-1.5 text-[11px]">
                           <span className="w-2 h-2 rounded-full bg-[#0EA5E9] inline-block" />
                           <span>{card.metricsBadge}</span>
                         </span>
@@ -741,7 +724,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                                 e.stopPropagation();
                                 setActiveLayer(null);
                               }}
-                              className="p-1 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0C4A6E] transition-colors"
+                              className="p-1 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0C4A6E] transition-colors cursor-pointer"
                               title="Return to Stack"
                             >
                               <X size={14} />
@@ -749,7 +732,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                           </div>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-[11px] text-[#0EA5E9] group-hover:translate-x-1 transition-all">
-                            <span>{hoveredLayer === 'design' ? 'Bring to Front ✦' : 'Enter Division'}</span>
+                            <span>Enter Division</span>
                             <ArrowUpRight size={14} />
                           </span>
                         )}
@@ -762,14 +745,14 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
             </div>
 
-            {/* Hint below 3D canvas */}
+            {/* Clean Hint below 3D canvas */}
             <div className="mt-2 text-center">
               <p className="text-[11px] font-mono text-[#3F7FA8] flex items-center justify-center gap-2">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
                 <span>
                   {activeLayer 
-                    ? 'Card floating in front of screen — click Enter Division to explore, or tap card to re-stack'
-                    : 'Touch any card or click the buttons above to bring it 3D in front of the screen'
+                    ? 'Card in front of screen — click Enter Division or tap card to re-stack'
+                    : 'Touch any card to pop it out in 3D'
                   }
                 </span>
               </p>
