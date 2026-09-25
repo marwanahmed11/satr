@@ -42,8 +42,8 @@ interface LayerData {
 }
 
 export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void }) {
-  const { t, language } = useLanguage();
-  const isRTL = language === 'ar';
+  const { t, lang } = useLanguage();
+  const isRTL = lang === 'ar';
 
   const [activeLayer, setActiveLayer] = useState<LayerId | null>(null);
   const [hoveredLayer, setHoveredLayer] = useState<LayerId | null>(null);

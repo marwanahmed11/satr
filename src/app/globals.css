@@ -2,6 +2,10 @@
 
 @layer base {
   :root {
+    --font-geist-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-ibm-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-jetbrains-mono: 'JetBrains Mono', monospace;
+
     --satr-navy: #0C4A6E;
     --satr-deep-sky: #0369A1;
     --satr-sky: #0EA5E9;
@@ -232,6 +236,15 @@
   color: var(--satr-mist);
   -webkit-text-stroke: 1px var(--satr-border-soft);
   z-index: -2;
+}
+
+@keyframes stageProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
 }
 
 /* Reduced motion support */

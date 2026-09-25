@@ -349,17 +349,6 @@ export function HowWeWork() {
 
       </div>
 
-      {/* Embedded Keyframes for Progress Bar */}
-      <style jsx>{`
-        @keyframes stageProgress {
-          0% {
-            width: 0%;
-          }
-          100% {
-            width: 100%;
-          }
-        }
-      `}</style>
     </section>
   );
 }

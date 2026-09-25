@@ -1,25 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, IBM_Plex_Sans_Arabic, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const ibmArabic = IBM_Plex_Sans_Arabic({
-  variable: "--font-ibm-arabic",
-  subsets: ["arabic"],
-  weight: ["400", "500", "600"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 export const metadata: Metadata = {
   title: "SATR — Built from the first line",
@@ -38,7 +19,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" dir="ltr" className={`${geistSans.variable} ${ibmArabic.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" dir="ltr">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" 
+          rel="stylesheet" 
+        />
+      </head>
       <body className="antialiased selection:bg-[#BAE6FD] selection:text-[#0C4A6E]">
         <LanguageProvider>
           {children}
