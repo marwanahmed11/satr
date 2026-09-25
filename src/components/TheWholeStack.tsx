@@ -394,7 +394,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-[480px] sm:h-[550px] flex items-center justify-center [perspective:1400px] select-none"
+              className="relative w-full h-[430px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none overflow-hidden"
             >
               
               {/* Ambient 3D ground grid circle */}
@@ -402,17 +402,17 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg) translateZ(-40px)`,
                 }}
-                className="absolute w-[440px] h-[440px] rounded-full border border-dashed border-[#BAE6FD]/40 pointer-events-none transition-transform duration-700 ease-out flex items-center justify-center"
+                className="absolute w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] rounded-full border border-dashed border-[#BAE6FD]/40 pointer-events-none transition-transform duration-700 ease-out flex items-center justify-center"
               >
-                <div className="w-[300px] h-[300px] rounded-full border border-[#E0F2FE]/60" />
+                <div className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] rounded-full border border-[#E0F2FE]/60" />
               </div>
 
-              {/* Isometric 3D Stage */}
+              {/* Isometric 3D Stage with responsive mobile scaling */}
               <div 
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg)`,
                 }}
-                className="relative w-[330px] sm:w-[380px] h-[240px] sm:h-[250px] [transform-style:preserve-3d] transition-transform duration-500 ease-out"
+                className="relative w-[300px] min-[390px]:w-[340px] sm:w-[380px] h-[230px] sm:h-[250px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.84] min-[390px]:scale-[0.92] sm:scale-100"
               >
                 
                 {/* ===================================================

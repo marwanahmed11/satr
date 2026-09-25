@@ -90,12 +90,12 @@ export default function HomePage() {
         <Navbar onOpenContact={() => setIsModalOpen(true)} />
 
         {/* Hero Body Content */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 py-12 flex-1 flex items-center">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-1 flex items-center">
           <div className="max-w-[540px] animate-in fade-in slide-in-from-bottom-4 duration-900 delay-200">
             
 
             {/* Headline */}
-            <h1 className="text-5xl sm:text-7xl lg:text-[80px] font-medium tracking-[-0.05em] leading-[1.0] text-[#0C4A6E] mb-5">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-[-0.05em] leading-[1.05] sm:leading-[1.0] text-[#0C4A6E] mb-4 sm:mb-5">
               <span>{t('hero.title_p1')}</span><br />
               <span>{t('hero.title_p2')}</span>{' '}
               <span className="text-[#0EA5E9]">{t('hero.title_line')}</span>
@@ -103,7 +103,7 @@ export default function HomePage() {
             </h1>
 
             {/* Sub-line with rotating word */}
-            <p className="text-lg sm:text-xl text-[#3F7FA8] leading-relaxed mb-8">
+            <p className="text-base sm:text-xl text-[#3F7FA8] leading-relaxed mb-6 sm:mb-8">
               <span>{t('hero.sub_prefix')} </span>
               <span 
                 className={`inline-block font-medium text-[#0EA5E9] border-b-[1.5px] border-[#0EA5E9] transition-all duration-300 ${
@@ -117,7 +117,7 @@ export default function HomePage() {
 
             {/* Idea Box (Glass Pill with Sky Glow) */}
             <form onSubmit={handleIdeaSubmit} className="max-w-md relative">
-              <div className="glass-pill flex items-center p-1.5 ps-5 bg-white/85 focus-within:bg-white focus-within:border-[#0EA5E9] shadow-[0_14px_30px_-14px_rgba(14,165,233,0.6)] transition-all">
+              <div className="glass-pill flex items-center p-1.5 ps-4 sm:ps-5 bg-white/85 focus-within:bg-white focus-within:border-[#0EA5E9] shadow-[0_14px_30px_-14px_rgba(14,165,233,0.6)] transition-all">
                 <input
                   type="text"
                   value={ideaText}
@@ -126,11 +126,11 @@ export default function HomePage() {
                     if (ideaFeedback) setIdeaFeedback(null);
                   }}
                   placeholder={t('hero.input_placeholder')}
-                  className="flex-1 min-w-0 bg-transparent border-none outline-none text-[#0C4A6E] placeholder-[#94A3B8] text-sm sm:text-base font-normal"
+                  className="flex-1 min-w-0 bg-transparent border-none outline-none text-[#0C4A6E] placeholder-[#94A3B8] text-base font-normal"
                 />
                 <button
                   type="submit"
-                  className="btn-primary py-2.5 px-5 text-xs sm:text-sm whitespace-nowrap"
+                  className="btn-primary py-2.5 px-4 sm:px-5 text-xs sm:text-sm whitespace-nowrap shrink-0"
                 >
                   <span>{t('hero.build_btn')}</span>
                 </button>

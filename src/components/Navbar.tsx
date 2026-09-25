@@ -23,7 +23,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
   }, []);
 
   return (
-    <header className="fixed top-5 left-0 right-0 z-50 flex justify-center px-6 pointer-events-none">
+    <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
       <div className="w-full max-w-6xl flex justify-between items-center pointer-events-auto">
         
         {/* Brand Wordmark */}
@@ -69,7 +69,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
           {/* Language Switch */}
           <button 
             onClick={toggleLanguage}
-            className="text-xs font-medium text-[#0C4A6E] border border-[#0EA5E9]/30 hover:border-[#0EA5E9] hover:bg-[#0EA5E9]/10 px-3 py-1 rounded-full transition-all"
+            className="text-xs font-medium text-[#0C4A6E] border border-[#0EA5E9]/30 hover:border-[#0EA5E9] hover:bg-[#0EA5E9]/10 px-3 py-1 rounded-full transition-all cursor-pointer"
             title="Switch Language"
           >
             {t('nav.switch')}
@@ -94,14 +94,14 @@ export function Navbar({ onOpenContact }: NavbarProps) {
         <div className="flex items-center gap-2 md:hidden">
           <button 
             onClick={toggleLanguage}
-            className="glass-pill px-3 py-1 text-xs font-medium text-[#0C4A6E] border border-[#7DD3FC]"
+            className="glass-pill px-3 py-1.5 text-xs font-medium text-[#0C4A6E] border border-[#7DD3FC] cursor-pointer"
           >
             {t('nav.switch')}
           </button>
 
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="glass-pill p-2 text-[#0C4A6E] flex items-center justify-center border border-[#7DD3FC]"
+            className="glass-pill p-2 text-[#0C4A6E] flex items-center justify-center border border-[#7DD3FC] cursor-pointer"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -110,27 +110,42 @@ export function Navbar({ onOpenContact }: NavbarProps) {
 
       </div>
 
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div 
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 bg-[#0C4A6E]/30 backdrop-blur-xs z-40 md:hidden pointer-events-auto"
+        />
+      )}
+
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-x-4 top-20 p-6 glass-card bg-white/95 border border-[#7DD3FC] pointer-events-auto flex flex-col gap-4 text-center md:hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-x-4 top-18 p-6 glass-card bg-white/98 border border-[#7DD3FC] pointer-events-auto flex flex-col gap-3 text-center md:hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 z-50">
           <Link 
             href="/work" 
             onClick={() => setMobileMenuOpen(false)}
-            className="py-2 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9]"
+            className="py-2.5 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9] border-b border-[#E0F2FE]"
           >
             {t('nav.work')}
           </Link>
           <Link 
             href="/services" 
             onClick={() => setMobileMenuOpen(false)}
-            className="py-2 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9]"
+            className="py-2.5 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9] border-b border-[#E0F2FE]"
           >
             {t('nav.services')}
           </Link>
           <Link 
+            href="/#stack" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="py-2.5 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9] border-b border-[#E0F2FE]"
+          >
+            {t('nav.stack')}
+          </Link>
+          <Link 
             href="/about" 
             onClick={() => setMobileMenuOpen(false)}
-            className="py-2 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9]"
+            className="py-2.5 text-[#0C4A6E] font-medium text-base hover:text-[#0EA5E9] border-b border-[#E0F2FE]"
           >
             {t('nav.process')}
           </Link>
@@ -140,7 +155,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
               setMobileMenuOpen(false);
               if (onOpenContact) onOpenContact();
             }}
-            className="btn-navy justify-center py-2.5 mt-2"
+            className="btn-navy justify-center py-3 mt-1 text-sm"
           >
             {t('nav.cta')}
           </Link>

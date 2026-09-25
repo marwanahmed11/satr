@@ -41,7 +41,7 @@ export function Footer() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5 sm:gap-6 flex-wrap justify-center">
             <a 
               href="https://linkedin.com" 
               target="_blank" 
@@ -66,7 +66,7 @@ export function Footer() {
             >
               Behance
             </a>
-            <span className="text-[#0C4A6E] font-medium ml-2">
+            <span className="text-[#0C4A6E] font-medium">
               {t('footer.location')}
             </span>
           </div>
@@ -74,7 +74,7 @@ export function Footer() {
         </div>
 
         {/* Giant 3D Extruded SATR Wordmark */}
-        <div className="relative w-full text-center py-6 select-none overflow-hidden">
+        <div className="relative w-full text-center py-4 sm:py-6 select-none overflow-hidden">
           <span 
             data-text="SATR" 
             className="giant-satr-text leading-[0.8]"
@@ -84,7 +84,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Line */}
-        <div className="flex justify-between items-center pt-8 border-t border-[#E0F2FE] text-xs text-[#3F7FA8]">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 sm:pt-8 border-t border-[#E0F2FE] text-xs text-[#3F7FA8] text-center">
           <span>{t('footer.copy')}</span>
           <span className="font-mono text-[#0EA5E9]">EST. 2026</span>
         </div>

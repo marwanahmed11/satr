@@ -190,10 +190,10 @@ export function HowWeWork() {
         </div>
 
         {/* Clean Horizontal Connected Stepper (100% faithful to reference mockup) */}
-        <div className="relative mb-14">
+        <div className="relative mb-10 sm:mb-14">
           
           {/* Continuous Connecting Line Running Behind All Icons */}
-          <div className="absolute top-[28px] sm:top-[30px] left-[28px] sm:left-[30px] right-[28px] sm:right-[30px] h-[2px] bg-[#BAE6FD] z-0 overflow-hidden">
+          <div className="absolute top-[22px] min-[390px]:top-[26px] sm:top-[30px] left-[22px] min-[390px]:left-[26px] sm:left-[30px] right-[22px] min-[390px]:right-[26px] sm:right-[30px] h-[2px] bg-[#BAE6FD] z-0 overflow-hidden">
             {/* Animated progression track matching active selection */}
             <div 
               style={{ 
@@ -226,23 +226,25 @@ export function HowWeWork() {
                 >
                   {/* Rounded Square Button Badge */}
                   <div 
-                    className={`relative w-[54px] h-[54px] sm:w-[60px] sm:h-[60px] rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                    className={`relative w-[44px] h-[44px] min-[390px]:w-[52px] min-[390px]:h-[52px] sm:w-[60px] sm:h-[60px] rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300 ${
                       isFilled
                         ? 'bg-[#0EA5E9] text-white shadow-[0_6px_18px_-2px_rgba(14,165,233,0.4)] hover:brightness-105 hover:scale-105'
                         : 'bg-[#E0F2FE] text-[#0EA5E9] hover:bg-[#BAE6FD] hover:scale-105'
-                    } ${isCurrent ? 'ring-4 ring-[#BAE6FD]/80 scale-105 shadow-[0_8px_24px_-2px_rgba(14,165,233,0.5)]' : ''}`}
+                    } ${isCurrent ? 'ring-3 sm:ring-4 ring-[#BAE6FD]/80 scale-105 shadow-[0_8px_24px_-2px_rgba(14,165,233,0.5)]' : ''}`}
                   >
-                    {renderStepIcon(idx, isFilled)}
+                    <div className="scale-75 min-[390px]:scale-90 sm:scale-100 flex items-center justify-center">
+                      {renderStepIcon(idx, isFilled)}
+                    </div>
 
                     {/* Subtle pulse ring on the currently active step */}
                     {isCurrent && !isPaused && (
-                      <span className="absolute -inset-1 rounded-2xl border-2 border-[#0EA5E9]/40 animate-ping pointer-events-none" />
+                      <span className="absolute -inset-1 rounded-xl sm:rounded-2xl border-2 border-[#0EA5E9]/40 animate-ping pointer-events-none" />
                     )}
                   </div>
 
                   {/* Stage Label Below Badge */}
                   <span 
-                    className={`mt-3 sm:mt-3.5 text-sm sm:text-base transition-colors ${
+                    className={`mt-2 sm:mt-3.5 text-[11px] sm:text-base transition-colors ${
                       isCurrent 
                         ? 'text-[#0C4A6E] font-bold' 
                         : 'text-[#0C4A6E] font-medium group-hover:text-[#0EA5E9]'
@@ -260,7 +262,7 @@ export function HowWeWork() {
         {/* Interactive Deliverables Card for Currently Selected Stage */}
         <div 
           key={activeStage}
-          className="relative rounded-2xl border border-[#D6E6F2] bg-gradient-to-br from-[#FFFFFF] to-[#F5FAFF] p-6 sm:p-8 shadow-[0_14px_30px_-20px_rgba(12,74,110,0.35)] transition-all duration-300 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300"
+          className="relative rounded-2xl border border-[#D6E6F2] bg-gradient-to-br from-[#FFFFFF] to-[#F5FAFF] p-4 sm:p-8 shadow-[0_14px_30px_-20px_rgba(12,74,110,0.35)] transition-all duration-300 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300"
         >
           {/* Top Progress countdown bar indicating auto-advance */}
           {!isPaused && (

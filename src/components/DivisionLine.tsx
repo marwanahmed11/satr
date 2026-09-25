@@ -28,12 +28,12 @@ export function DivisionLine() {
         </div>
 
         {/* 7 Division Labels */}
-        <div className="grid grid-cols-4 sm:grid-cols-7 text-center gap-2 mt-2.5 text-xs font-medium text-[#0C4A6E]">
+        <div className="flex flex-wrap items-center justify-center sm:grid sm:grid-cols-7 text-center gap-x-4 gap-y-1.5 sm:gap-2 mt-2.5 text-xs font-medium text-[#0C4A6E]">
           {divisions.map((item) => (
             <Link
               key={item.slug}
               href={`/services/${item.slug}`}
-              className="py-1 hover:text-[#0EA5E9] hover:-translate-y-0.5 transition-all"
+              className="py-1 px-1 hover:text-[#0EA5E9] hover:-translate-y-0.5 transition-all whitespace-nowrap"
             >
               {t(item.key)}
             </Link>

@@ -232,7 +232,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Jane Doe"
-                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
                     />
                   </div>
 
@@ -246,7 +246,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="jane@company.com"
-                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
                     />
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export default function ContactPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+20 100 000 0000"
-                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
                     />
                   </div>
 
@@ -274,7 +274,7 @@ export default function ContactPage() {
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       placeholder="Acme Corp"
-                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                      className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
                     />
                   </div>
                 </div>
@@ -288,7 +288,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Describe your user flow, core pain point, or target features..."
-                    className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E] resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E] resize-none"
                   />
                 </div>
 

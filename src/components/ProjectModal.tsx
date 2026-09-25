@@ -85,12 +85,12 @@ export function ProjectModal({ isOpen, onClose, initialIdea = '' }: ProjectModal
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0C4A6E]/50 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#0C4A6E]/50 backdrop-blur-md animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#D6E6F2] shadow-[0_25px_60px_-15px_rgba(12,74,110,0.6)] p-8 sm:p-10 animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl border border-[#D6E6F2] shadow-[0_25px_60px_-15px_rgba(12,74,110,0.6)] p-6 sm:p-10 animate-in zoom-in-95 duration-200">
         
         {/* Close button */}
         <button
@@ -240,7 +240,7 @@ export function ProjectModal({ isOpen, onClose, initialIdea = '' }: ProjectModal
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Full name *"
-                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
               />
               <input
                 type="email"
@@ -248,21 +248,21 @@ export function ProjectModal({ isOpen, onClose, initialIdea = '' }: ProjectModal
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="Work email *"
-                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
               />
               <input
                 type="text"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 placeholder="Company or project name"
-                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E]"
               />
               <textarea
                 rows={3}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 placeholder="Describe your vision or product requirement..."
-                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-sm focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E] resize-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#D6E6F2] text-base focus:outline-none focus:border-[#0EA5E9] text-[#0C4A6E] resize-none"
               />
             </div>
 
