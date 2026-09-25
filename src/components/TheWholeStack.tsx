@@ -177,7 +177,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
       // On mobile screens (<640px), keep translateZ and scale calibrated so the card never clips or overflows
       return {
         transform: isMobile
-          ? 'translateZ(135px) translateY(12px) rotateZ(36deg) rotateX(-56deg) scale(0.92)'
+          ? 'translateZ(40px) translateY(0px) rotateZ(36deg) rotateX(-56deg) scale(0.96)'
           : 'translateZ(230px) translateY(28px) rotateZ(36deg) rotateX(-56deg) scale(1.08)',
         zIndex: 50,
         opacity: 1,
@@ -195,14 +195,14 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     if (isAnyActive) {
       // Background cards sink back, dim, and blur to emphasize front depth
       let restZ = 0;
-      if (layerId === 'design') restZ = isMobile ? 25 : 40;
-      if (layerId === 'code') restZ = isMobile ? 12 : 20;
+      if (layerId === 'design') restZ = isMobile ? 15 : 40;
+      if (layerId === 'code') restZ = isMobile ? 5 : 20;
       if (layerId === 'infra') restZ = 0;
 
       return {
-        transform: `translateZ(${restZ}px) scale(${isMobile ? 0.86 : 0.9})`,
+        transform: `translateZ(${restZ}px) scale(${isMobile ? 0.82 : 0.9})`,
         zIndex: layerId === 'design' ? 30 : layerId === 'code' ? 20 : 10,
-        opacity: 0.3,
+        opacity: 0.25,
         filter: 'blur(1.5px)',
         boxShadow: '0 20px 35px -15px rgba(12,74,110,0.2)',
       };
@@ -213,12 +213,12 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     let z = 0;
     if (isExploded) {
       if (layerId === 'infra') z = -20;
-      if (layerId === 'code') z = isMobile ? 85 : 120;
-      if (layerId === 'design') z = isMobile ? 175 : 260;
+      if (layerId === 'code') z = isMobile ? 65 : 120;
+      if (layerId === 'design') z = isMobile ? 130 : 260;
     } else {
       if (layerId === 'infra') z = 0;
-      if (layerId === 'code') z = isMobile ? 70 : 95;
-      if (layerId === 'design') z = isMobile ? 140 : 190;
+      if (layerId === 'code') z = isMobile ? 50 : 95;
+      if (layerId === 'design') z = isMobile ? 100 : 190;
     }
 
     if (isHovered && !isMobile) {
@@ -239,10 +239,10 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   const activeData = layers.find((l) => l.id === activeLayer);
 
   return (
-    <section className="py-24 sm:py-32 bg-gradient-to-b from-white via-[#F5FAFF] to-white overflow-hidden" id="stack">
-      <div className="w-full max-w-6xl mx-auto px-6">
+    <section className="py-16 sm:py-32 bg-gradient-to-b from-white via-[#F5FAFF] to-white overflow-hidden" id="stack">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           
           {/* =========================================
               Left Column: Information & Controls
@@ -309,8 +309,8 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               )}
             </div>
 
-            {/* Clean Layer Controller Bar in Left Column (Never overlaps the 3D canvas) */}
-            <div className="p-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-6">
+            {/* Clean Layer Controller Bar in Left Column (Desktop only - mobile gets controls directly above 3D canvas) */}
+            <div className="p-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-6 hidden lg:block">
               <div className="flex items-center justify-between mb-2 px-1">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-[#0369A1] font-medium">
                   {isRTL ? 'التحكم بالطبقات 3D:' : '3D LAYER CONTROLS:'}
@@ -404,12 +404,74 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
              ======================================================= */}
           <div className="lg:col-span-7 flex flex-col items-center justify-center">
             
+            {/* Mobile 3D Layer Controller Bar - visible only on mobile/tablet */}
+            <div className="w-full max-w-sm mx-auto p-2.5 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-4 block lg:hidden shadow-xs">
+              <div className="flex items-center justify-between mb-1.5 px-1">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#0369A1] font-semibold">
+                  {isRTL ? 'التحكم بالطبقات 3D:' : '3D LAYER CONTROLS:'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveLayer(null);
+                    setIsExploded(!isExploded);
+                  }}
+                  className="text-[10px] font-mono text-[#3F7FA8] hover:text-[#0C4A6E] flex items-center gap-1 cursor-pointer"
+                  title="Toggle exploded 3D spacing"
+                >
+                  <Layers size={11} />
+                  <span>{isExploded && !activeLayer ? (isRTL ? 'تجميع' : 'Compact Deck') : (isRTL ? 'تفريق 3D' : 'Explode 3D')}</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
+                  className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                    activeLayer === 'design'
+                      ? 'bg-[#0EA5E9] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                  }`}
+                >
+                  <Palette size={12} className="shrink-0" />
+                  <span className="truncate">03 Design</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
+                  className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                    activeLayer === 'code'
+                      ? 'bg-[#0284C7] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                  }`}
+                >
+                  <Brackets size={12} className="shrink-0" />
+                  <span className="truncate">02 Code</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
+                  className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                    activeLayer === 'infra'
+                      ? 'bg-[#0C4A6E] text-white shadow-xs'
+                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                  }`}
+                >
+                  <Server size={12} className="shrink-0" />
+                  <span className="truncate">01 Infra</span>
+                </button>
+              </div>
+            </div>
+
             {/* 3D Viewport Container */}
             <div 
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-[460px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none overflow-hidden"
+              className="relative w-full h-[400px] min-[390px]:h-[440px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none"
             >
               
               {/* Ambient 3D ground grid circle */}
@@ -417,9 +479,9 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg) translateZ(-40px)`,
                 }}
-                className="absolute w-[320px] h-[320px] sm:w-[440px] sm:h-[440px] rounded-full border border-dashed border-[#BAE6FD]/40 pointer-events-none transition-transform duration-700 ease-out flex items-center justify-center"
+                className="absolute w-[280px] h-[280px] sm:w-[440px] sm:h-[440px] rounded-full border border-dashed border-[#BAE6FD]/40 pointer-events-none transition-transform duration-700 ease-out flex items-center justify-center"
               >
-                <div className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] rounded-full border border-[#E0F2FE]/60" />
+                <div className="w-[180px] h-[180px] sm:w-[300px] sm:h-[300px] rounded-full border border-[#E0F2FE]/60" />
               </div>
 
               {/* Isometric 3D Stage with responsive mobile scaling */}
@@ -427,7 +489,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg)`,
                 }}
-                className="relative w-[300px] min-[390px]:w-[335px] sm:w-[380px] h-[265px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.88] min-[390px]:scale-[0.95] sm:scale-100"
+                className="relative w-[270px] min-[390px]:w-[305px] sm:w-[380px] h-[260px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.80] min-[390px]:scale-[0.88] sm:scale-100"
               >
                 
                 {/* ===================================================
@@ -760,17 +822,27 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
             </div>
 
-            {/* Clean Hint below 3D canvas */}
-            <div className="mt-2 text-center">
-              <p className="text-[11px] font-mono text-[#3F7FA8] flex items-center justify-center gap-2">
+            {/* Clean Hint & Quick Link below 3D canvas */}
+            <div className="mt-3 text-center flex flex-col items-center gap-2">
+              <p className="text-[11px] font-mono text-[#3F7FA8] flex items-center justify-center gap-1.5">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
                 <span>
                   {activeLayer 
-                    ? 'Card in front of screen — click Enter Division or tap card to re-stack'
-                    : 'Touch any card to pop it out in 3D'
+                    ? (isRTL ? 'البطاقة في مقدمة الشاشة — اضغط عليها للعودة للحزمة' : 'Card in focus — tap card or (X) to return to stack')
+                    : (isRTL ? 'المس أي بطاقة لإبرازها في وضع 3D' : 'Touch any card to pop it out in 3D')
                   }
                 </span>
               </p>
+
+              {activeData && (
+                <Link
+                  href={activeData.divisionHref}
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0EA5E9] text-white hover:bg-[#0284C7] text-xs font-medium transition-all shadow-xs lg:hidden"
+                >
+                  <span>{isRTL ? `استكشف قسم ${activeData.name}` : `Explore ${activeData.name} Division`}</span>
+                  <ArrowUpRight size={13} />
+                </Link>
+              )}
             </div>
 
           </div>
