@@ -172,13 +172,13 @@ export function SelectedWork() {
         </div>
 
         {/* 3 Resized Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {cards.map((card) => (
             <Link key={card.slug} href={`/work/${card.slug}`} className="block group">
               <div
                 onMouseMove={handleTilt}
                 onMouseLeave={handleResetTilt}
-                className={`rounded-2xl overflow-hidden p-6 sm:p-7 pb-0 min-h-[430px] flex flex-col justify-between bg-gradient-to-br ${card.gradientClass} ${card.textColorClass} border ${card.borderColorClass} shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:shadow-[0_28px_50px_-20px_rgba(12,74,110,0.55)] transition-all duration-300 [perspective:900px]`}
+                className={`rounded-2xl overflow-hidden p-5 sm:p-7 pb-0 min-h-[385px] sm:min-h-[430px] flex flex-col justify-between bg-gradient-to-br ${card.gradientClass} ${card.textColorClass} border ${card.borderColorClass} shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:shadow-[0_28px_50px_-20px_rgba(12,74,110,0.55)] transition-all duration-300 [perspective:900px] active:scale-[0.99]`}
               >
                 <div>
                   {/* Topic badge */}

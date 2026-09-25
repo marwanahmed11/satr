@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   Server, 
@@ -14,7 +14,7 @@ import {
   X,
   ExternalLink,
   Layers
-} from 'lucide-react';
+} from 'lucide-react'; 
 import Link from 'next/link';
 
 type LayerId = 'design' | 'code' | 'infra';
@@ -49,7 +49,18 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   const [hoveredLayer, setHoveredLayer] = useState<LayerId | null>(null);
   const [isExploded, setIsExploded] = useState(false);
   const [mouseTilt, setMouseTilt] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Detect mobile viewport (<640px)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const layers: LayerData[] = [
     {
@@ -138,9 +149,9 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     }
   ];
 
-  // Mouse tilt tracking
+  // Mouse tilt tracking (disabled on mobile to avoid scroll conflict)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || isMobile) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
@@ -153,8 +164,8 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   };
 
   // Base 3D Angles
-  const baseRotateX = 56 + mouseTilt.y * 4;
-  const baseRotateZ = -36 + mouseTilt.x * 4;
+  const baseRotateX = 56 + (isMobile ? 0 : mouseTilt.y * 4);
+  const baseRotateZ = -36 + (isMobile ? 0 : mouseTilt.x * 4);
 
   // Calculate 3D transforms for each card
   const getCardTransform = (layerId: LayerId) => {
@@ -163,9 +174,11 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
     if (isThisActive) {
       // The active card detaches and floats right in front of the screen facing the camera!
-      // translateY(45px) balances the projection so it stays vertically centered in the viewport
+      // On mobile screens (<640px), keep translateZ and scale calibrated so the card never clips or overflows
       return {
-        transform: 'translateZ(230px) translateY(45px) rotateZ(36deg) rotateX(-56deg) scale(1.1)',
+        transform: isMobile
+          ? 'translateZ(135px) translateY(12px) rotateZ(36deg) rotateX(-56deg) scale(0.92)'
+          : 'translateZ(230px) translateY(28px) rotateZ(36deg) rotateX(-56deg) scale(1.08)',
         zIndex: 50,
         opacity: 1,
         filter: 'none',
@@ -182,15 +195,15 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     if (isAnyActive) {
       // Background cards sink back, dim, and blur to emphasize front depth
       let restZ = 0;
-      if (layerId === 'design') restZ = 40;
-      if (layerId === 'code') restZ = 20;
+      if (layerId === 'design') restZ = isMobile ? 25 : 40;
+      if (layerId === 'code') restZ = isMobile ? 12 : 20;
       if (layerId === 'infra') restZ = 0;
 
       return {
-        transform: `translateZ(${restZ}px) scale(0.9)`,
+        transform: `translateZ(${restZ}px) scale(${isMobile ? 0.86 : 0.9})`,
         zIndex: layerId === 'design' ? 30 : layerId === 'code' ? 20 : 10,
-        opacity: 0.35,
-        filter: 'blur(1px)',
+        opacity: 0.3,
+        filter: 'blur(1.5px)',
         boxShadow: '0 20px 35px -15px rgba(12,74,110,0.2)',
       };
     }
@@ -200,20 +213,20 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
     let z = 0;
     if (isExploded) {
       if (layerId === 'infra') z = -20;
-      if (layerId === 'code') z = 120;
-      if (layerId === 'design') z = 260;
+      if (layerId === 'code') z = isMobile ? 85 : 120;
+      if (layerId === 'design') z = isMobile ? 175 : 260;
     } else {
       if (layerId === 'infra') z = 0;
-      if (layerId === 'code') z = 95;
-      if (layerId === 'design') z = 190;
+      if (layerId === 'code') z = isMobile ? 70 : 95;
+      if (layerId === 'design') z = isMobile ? 140 : 190;
     }
 
-    if (isHovered) {
-      z += 24;
+    if (isHovered && !isMobile) {
+      z += 20;
     }
 
     return {
-      transform: `translateZ(${z}px) scale(${isHovered ? 1.04 : 1})`,
+      transform: `translateZ(${z}px) scale(${isHovered && !isMobile ? 1.03 : 1})`,
       zIndex: layerId === 'design' ? 30 : layerId === 'code' ? 20 : 10,
       opacity: 1,
       filter: 'none',
@@ -249,13 +262,13 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
             </p>
 
             {/* Dynamic Architecture Spec Box based on Active 3D Selection */}
-            <div className="p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-[0_15px_30px_-15px_rgba(12,74,110,0.08)] mb-6 transition-all duration-300">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-[0_15px_30px_-15px_rgba(12,74,110,0.08)] mb-5 transition-all duration-300">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-mono text-xs text-[#0369A1] uppercase tracking-wider font-semibold flex items-center gap-1.5">
                   <Sparkles size={14} className="text-[#0EA5E9]" />
                   {activeData 
                     ? `LAYER ${activeData.layerNum} · ${activeData.name.toUpperCase()}`
-                    : 'FULL STACK ARCHITECTURE'
+                    : (isRTL ? 'معمارية الحزمة المتكاملة' : 'FULL STACK ARCHITECTURE')
                   }
                 </span>
 
@@ -264,7 +277,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                     onClick={() => setActiveLayer(null)}
                     className="text-[11px] font-mono text-[#0EA5E9] hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    <span>Stack View</span>
+                    <span>{isRTL ? 'عرض الحزمة' : 'Stack View'}</span>
                     <RotateCcw size={11} />
                   </button>
                 )}
@@ -273,7 +286,9 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               <p className="text-xs text-[#0C4A6E] leading-relaxed mb-3">
                 {activeData 
                   ? activeData.description
-                  : 'Touch any card on the right or click the buttons below to inspect each layer in full 3D with architectural specifications.'
+                  : (isRTL 
+                      ? 'المس أي بطاقة ثلاثية الأبعاد أدناه أو استخدم أزرار التحكم لفحص كل طبقة ومواصفاتها المعمارية بدقة.'
+                      : 'Touch any card on the right or click the buttons below to inspect each layer in full 3D with architectural specifications.')
                 }
               </p>
 
@@ -289,16 +304,16 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               ) : (
                 <div className="flex items-center gap-2 pt-2 border-t border-[#E0F2FE] text-[11px] font-mono text-[#0284C7]">
                   <span className="h-2 w-2 rounded-full bg-[#0EA5E9] animate-ping" />
-                  <span>Click any card in the 3D stack to pop out</span>
+                  <span>{isRTL ? 'المس أي بطاقة لإبرازها في وضع 3D' : 'Click any card in the 3D stack to pop out'}</span>
                 </div>
               )}
             </div>
 
             {/* Clean Layer Controller Bar in Left Column (Never overlaps the 3D canvas) */}
-            <div className="p-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-7">
+            <div className="p-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-6">
               <div className="flex items-center justify-between mb-2 px-1">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-[#0369A1] font-medium">
-                  3D LAYER CONTROLS:
+                  {isRTL ? 'التحكم بالطبقات 3D:' : '3D LAYER CONTROLS:'}
                 </span>
                 <button
                   type="button"
@@ -310,48 +325,48 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                   title="Toggle exploded 3D spacing"
                 >
                   <Layers size={12} />
-                  <span>{isExploded && !activeLayer ? 'Compact Deck' : 'Explode 3D'}</span>
+                  <span>{isExploded && !activeLayer ? (isRTL ? 'تجميع' : 'Compact Deck') : (isRTL ? 'تفريق 3D' : 'Explode 3D')}</span>
                 </button>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
-                  className={`py-2 px-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 px-1.5 min-[390px]:px-2.5 rounded-xl text-[11px] min-[390px]:text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1 min-[390px]:gap-1.5 cursor-pointer ${
                     activeLayer === 'design'
                       ? 'bg-[#0EA5E9] text-white shadow-xs'
                       : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
                   }`}
                 >
-                  <Palette size={13} />
-                  <span>03 Design</span>
+                  <Palette size={12} className="shrink-0" />
+                  <span className="truncate">03 Design</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
-                  className={`py-2 px-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 px-1.5 min-[390px]:px-2.5 rounded-xl text-[11px] min-[390px]:text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1 min-[390px]:gap-1.5 cursor-pointer ${
                     activeLayer === 'code'
                       ? 'bg-[#0284C7] text-white shadow-xs'
                       : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
                   }`}
                 >
-                  <Brackets size={13} />
-                  <span>02 Code</span>
+                  <Brackets size={12} className="shrink-0" />
+                  <span className="truncate">02 Code</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
-                  className={`py-2 px-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 px-1.5 min-[390px]:px-2.5 rounded-xl text-[11px] min-[390px]:text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1 min-[390px]:gap-1.5 cursor-pointer ${
                     activeLayer === 'infra'
                       ? 'bg-[#0C4A6E] text-white shadow-xs'
                       : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
                   }`}
                 >
-                  <Server size={13} />
-                  <span>01 Infra</span>
+                  <Server size={12} className="shrink-0" />
+                  <span className="truncate">01 Infra</span>
                 </button>
               </div>
             </div>
@@ -394,7 +409,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-[430px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none overflow-hidden"
+              className="relative w-full h-[460px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none overflow-hidden"
             >
               
               {/* Ambient 3D ground grid circle */}
@@ -412,7 +427,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg)`,
                 }}
-                className="relative w-[300px] min-[390px]:w-[340px] sm:w-[380px] h-[230px] sm:h-[250px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.84] min-[390px]:scale-[0.92] sm:scale-100"
+                className="relative w-[300px] min-[390px]:w-[335px] sm:w-[380px] h-[265px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.88] min-[390px]:scale-[0.95] sm:scale-100"
               >
                 
                 {/* ===================================================
@@ -437,44 +452,44 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                         boxShadow: style.boxShadow,
                         transition: 'transform 600ms cubic-bezier(0.34, 1.25, 0.64, 1), opacity 400ms ease, box-shadow 400ms ease, filter 400ms ease',
                       }}
-                      className={`absolute inset-0 rounded-2xl ${card.colorScheme.bg} ${card.colorScheme.border} p-5 sm:p-6 flex flex-col justify-between text-white cursor-pointer group`}
+                      className={`absolute inset-0 rounded-2xl ${card.colorScheme.bg} ${card.colorScheme.border} p-4 min-[390px]:p-5 sm:p-6 flex flex-col justify-between text-white cursor-pointer group`}
                     >
                       {/* Top Header */}
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] text-[#7DD3FC] tracking-wider uppercase block">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 min-[390px]:gap-2">
+                            <span className="font-mono text-[10px] min-[390px]:text-[11px] text-[#7DD3FC] tracking-wider uppercase block truncate">
                               LAYER {card.layerNum} · {card.subTitle}
                             </span>
                             {isFront && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] text-[9px] font-mono font-medium">
+                              <span className="inline-flex items-center gap-1 px-1.5 min-[390px]:px-2 py-0.5 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] text-[8.5px] min-[390px]:text-[9px] font-mono font-medium shrink-0">
                                 <span className="h-1.5 w-1.5 rounded-full bg-[#38BDF8] animate-ping" />
-                                3D IN FOCUS
+                                3D FOCUS
                               </span>
                             )}
                           </div>
                           
-                          <span className="text-xl sm:text-2xl font-medium text-white tracking-tight block mt-1 group-hover:text-[#BAE6FD] transition-colors">
+                          <span className="text-lg min-[390px]:text-xl sm:text-2xl font-medium text-white tracking-tight block mt-0.5 group-hover:text-[#BAE6FD] transition-colors truncate">
                             {card.name}
                           </span>
                           
-                          <span className="text-xs text-[#BAE6FD]/80 mt-1 block">
+                          <span className="text-[11px] min-[390px]:text-xs text-[#BAE6FD]/80 mt-0.5 block truncate">
                             {card.techSummary}
                           </span>
                         </div>
 
-                        <div className="w-10 h-10 rounded-xl bg-[#082f49] flex items-center justify-center text-[#7DD3FC] border border-[#BAE6FD]/20 group-hover:border-[#38BDF8] transition-colors shrink-0 ms-2">
-                          <Server size={20} />
+                        <div className="w-9 h-9 min-[390px]:w-10 min-[390px]:h-10 rounded-xl bg-[#082f49] flex items-center justify-center text-[#7DD3FC] border border-[#BAE6FD]/20 group-hover:border-[#38BDF8] transition-colors shrink-0 ms-1">
+                          <Server size={18} />
                         </div>
                       </div>
 
                       {/* Middle: Expanded In-Front Content */}
                       {isFront && (
-                        <div className="my-2 p-2.5 rounded-xl bg-white/10 border border-white/15 text-xs text-[#BAE6FD] animate-in fade-in duration-300">
-                          <div className="grid grid-cols-2 gap-1.5">
+                        <div className="my-1.5 min-[390px]:my-2 p-2 min-[390px]:p-2.5 rounded-xl bg-white/10 border border-white/15 text-xs text-[#BAE6FD] animate-in fade-in duration-300">
+                          <div className="grid grid-cols-2 gap-1 min-[390px]:gap-1.5">
                             {card.keySpecs.map((spec, i) => (
-                              <div key={i} className="flex items-center gap-1.5 text-[10px] text-white">
-                                <CheckCircle2 size={11} className="text-[#38BDF8] shrink-0" />
+                              <div key={i} className="flex items-center gap-1 min-[390px]:gap-1.5 text-[9.5px] min-[390px]:text-[10.5px] text-white">
+                                <CheckCircle2 size={10} className="text-[#38BDF8] shrink-0" />
                                 <span className="truncate">{spec}</span>
                               </div>
                             ))}
@@ -483,21 +498,21 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                       )}
 
                       {/* Bottom Footer / Action Bar */}
-                      <div className="flex items-center justify-between pt-2.5 border-t border-white/10 text-xs font-mono text-[#7DD3FC]">
-                        <span className="flex items-center gap-1.5 text-[11px]">
-                          <span className="w-2 h-2 rounded-full bg-[#38BDF8] inline-block" />
-                          <span>{card.metricsBadge}</span>
+                      <div className="flex items-center justify-between gap-1 pt-2 min-[390px]:pt-2.5 border-t border-white/10 text-xs font-mono text-[#7DD3FC]">
+                        <span className="flex items-center gap-1.5 text-[10px] min-[390px]:text-[11px] max-w-[130px] min-[390px]:max-w-[170px] truncate">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shrink-0 inline-block" />
+                          <span className="truncate">{card.metricsBadge}</span>
                         </span>
 
                         {isFront ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <Link
                               href={card.divisionHref}
                               onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#38BDF8] text-[#082F49] font-sans font-medium text-xs hover:bg-white transition-all shadow-xs"
+                              className="inline-flex items-center gap-1 px-2.5 min-[390px]:px-3 py-1 rounded-full bg-[#38BDF8] text-[#082F49] font-sans font-medium text-[11px] min-[390px]:text-xs hover:bg-white transition-all shadow-xs shrink-0"
                             >
-                              <span>Enter Division</span>
-                              <ExternalLink size={12} />
+                              <span>{isMobile ? (isRTL ? 'استكشف' : 'Explore') : (isRTL ? 'دخول القسم' : 'Enter Division')}</span>
+                              <ExternalLink size={11} />
                             </Link>
                             <button
                               type="button"
@@ -505,16 +520,16 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                                 e.stopPropagation();
                                 setActiveLayer(null);
                               }}
-                              className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                              className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer shrink-0"
                               title="Return to Stack"
                             >
-                              <X size={14} />
+                              <X size={13} />
                             </button>
                           </div>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] text-[#BAE6FD] group-hover:text-white group-hover:translate-x-1 transition-all">
-                            <span>Enter Division</span>
-                            <ArrowUpRight size={14} />
+                          <span className="inline-flex items-center gap-1 text-[10px] min-[390px]:text-[11px] text-[#BAE6FD] group-hover:text-white group-hover:translate-x-1 transition-all shrink-0">
+                            <span>{isRTL ? 'عرض القسم' : 'Enter Division'}</span>
+                            <ArrowUpRight size={13} />
                           </span>
                         )}
                       </div>
@@ -544,44 +559,44 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                         boxShadow: style.boxShadow,
                         transition: 'transform 600ms cubic-bezier(0.34, 1.25, 0.64, 1), opacity 400ms ease, box-shadow 400ms ease, filter 400ms ease',
                       }}
-                      className={`absolute inset-0 rounded-2xl ${card.colorScheme.bg} ${card.colorScheme.border} p-5 sm:p-6 flex flex-col justify-between text-white cursor-pointer group`}
+                      className={`absolute inset-0 rounded-2xl ${card.colorScheme.bg} ${card.colorScheme.border} p-4 min-[390px]:p-5 sm:p-6 flex flex-col justify-between text-white cursor-pointer group`}
                     >
                       {/* Top Header */}
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] text-[#BAE6FD] tracking-wider uppercase block">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 min-[390px]:gap-2">
+                            <span className="font-mono text-[10px] min-[390px]:text-[11px] text-[#BAE6FD] tracking-wider uppercase block truncate">
                               LAYER {card.layerNum} · {card.subTitle}
                             </span>
                             {isFront && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] font-mono font-medium">
+                              <span className="inline-flex items-center gap-1 px-1.5 min-[390px]:px-2 py-0.5 rounded-full bg-white/20 text-white text-[8.5px] min-[390px]:text-[9px] font-mono font-medium shrink-0">
                                 <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
-                                3D IN FOCUS
+                                3D FOCUS
                               </span>
                             )}
                           </div>
 
-                          <span className="text-xl sm:text-2xl font-medium text-white tracking-tight block mt-1">
+                          <span className="text-lg min-[390px]:text-xl sm:text-2xl font-medium text-white tracking-tight block mt-0.5 truncate">
                             {card.name}
                           </span>
 
-                          <span className="text-xs text-white/90 mt-1 block">
+                          <span className="text-[11px] min-[390px]:text-xs text-white/90 mt-0.5 block truncate">
                             {card.techSummary}
                           </span>
                         </div>
 
-                        <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white border border-white/30 group-hover:bg-white/30 transition-colors shrink-0 ms-2">
-                          <Brackets size={20} />
+                        <div className="w-9 h-9 min-[390px]:w-10 min-[390px]:h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white border border-white/30 group-hover:bg-white/30 transition-colors shrink-0 ms-1">
+                          <Brackets size={18} />
                         </div>
                       </div>
 
                       {/* Middle: Expanded In-Front Content */}
                       {isFront && (
-                        <div className="my-2 p-2.5 rounded-xl bg-black/15 border border-white/20 text-xs text-white animate-in fade-in duration-300">
-                          <div className="grid grid-cols-2 gap-1.5">
+                        <div className="my-1.5 min-[390px]:my-2 p-2 min-[390px]:p-2.5 rounded-xl bg-black/15 border border-white/20 text-xs text-white animate-in fade-in duration-300">
+                          <div className="grid grid-cols-2 gap-1 min-[390px]:gap-1.5">
                             {card.keySpecs.map((spec, i) => (
-                              <div key={i} className="flex items-center gap-1.5 text-[10px] text-white">
-                                <CheckCircle2 size={11} className="text-[#38BDF8] shrink-0" />
+                              <div key={i} className="flex items-center gap-1 min-[390px]:gap-1.5 text-[9.5px] min-[390px]:text-[10.5px] text-white">
+                                <CheckCircle2 size={10} className="text-[#38BDF8] shrink-0" />
                                 <span className="truncate">{spec}</span>
                               </div>
                             ))}
@@ -590,21 +605,21 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                       )}
 
                       {/* Bottom Footer / Action Bar */}
-                      <div className="flex items-center justify-between pt-2.5 border-t border-white/20 text-xs font-mono text-white/90">
-                        <span className="flex items-center gap-1.5 text-[11px]">
-                          <span className="w-2 h-2 rounded-full bg-white inline-block" />
-                          <span>{card.metricsBadge}</span>
+                      <div className="flex items-center justify-between gap-1 pt-2 min-[390px]:pt-2.5 border-t border-white/20 text-xs font-mono text-white/90">
+                        <span className="flex items-center gap-1.5 text-[10px] min-[390px]:text-[11px] max-w-[130px] min-[390px]:max-w-[170px] truncate">
+                          <span className="w-2 h-2 rounded-full bg-white shrink-0 inline-block" />
+                          <span className="truncate">{card.metricsBadge}</span>
                         </span>
 
                         {isFront ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <Link
                               href={card.divisionHref}
                               onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-[#0284C7] font-sans font-medium text-xs hover:bg-[#BAE6FD] transition-all shadow-xs"
+                              className="inline-flex items-center gap-1 px-2.5 min-[390px]:px-3 py-1 rounded-full bg-white text-[#0284C7] font-sans font-medium text-[11px] min-[390px]:text-xs hover:bg-[#BAE6FD] transition-all shadow-xs shrink-0"
                             >
-                              <span>Enter Division</span>
-                              <ExternalLink size={12} />
+                              <span>{isMobile ? (isRTL ? 'استكشف' : 'Explore') : (isRTL ? 'دخول القسم' : 'Enter Division')}</span>
+                              <ExternalLink size={11} />
                             </Link>
                             <button
                               type="button"
@@ -612,16 +627,16 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                                 e.stopPropagation();
                                 setActiveLayer(null);
                               }}
-                              className="p-1 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                              className="p-1 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer shrink-0"
                               title="Return to Stack"
                             >
-                              <X size={14} />
+                              <X size={13} />
                             </button>
                           </div>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] text-white group-hover:translate-x-1 transition-all">
-                            <span>Enter Division</span>
-                            <ArrowUpRight size={14} />
+                          <span className="inline-flex items-center gap-1 text-[10px] min-[390px]:text-[11px] text-white group-hover:translate-x-1 transition-all shrink-0">
+                            <span>{isRTL ? 'عرض القسم' : 'Enter Division'}</span>
+                            <ArrowUpRight size={13} />
                           </span>
                         )}
                       </div>
@@ -651,37 +666,37 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                         boxShadow: style.boxShadow,
                         transition: 'transform 600ms cubic-bezier(0.34, 1.25, 0.64, 1), opacity 400ms ease, box-shadow 400ms ease, filter 400ms ease',
                       }}
-                      className={`absolute inset-0 rounded-2xl ${card.colorScheme.bg} ${card.colorScheme.border} p-5 sm:p-6 flex flex-col justify-between text-[#0C4A6E] cursor-pointer group`}
+                      className={`absolute inset-0 rounded-2xl ${card.colorScheme.bg} ${card.colorScheme.border} p-4 min-[390px]:p-5 sm:p-6 flex flex-col justify-between text-[#0C4A6E] cursor-pointer group`}
                     >
                       {/* Top Header */}
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] text-[#0EA5E9] tracking-wider uppercase block">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 min-[390px]:gap-2">
+                            <span className="font-mono text-[10px] min-[390px]:text-[11px] text-[#0EA5E9] tracking-wider uppercase block truncate">
                               LAYER {card.layerNum} · {card.subTitle}
                             </span>
                             {isFront && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[9px] font-mono font-medium">
+                              <span className="inline-flex items-center gap-1 px-1.5 min-[390px]:px-2 py-0.5 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[8.5px] min-[390px]:text-[9px] font-mono font-medium shrink-0">
                                 <span className="h-1.5 w-1.5 rounded-full bg-[#0EA5E9] animate-ping" />
-                                3D IN FOCUS
+                                3D FOCUS
                               </span>
                             )}
                           </div>
 
-                          <span className="text-xl sm:text-2xl font-medium text-[#0C4A6E] tracking-tight block mt-1 group-hover:text-[#0EA5E9] transition-colors">
+                          <span className="text-lg min-[390px]:text-xl sm:text-2xl font-medium text-[#0C4A6E] tracking-tight block mt-0.5 group-hover:text-[#0EA5E9] transition-colors truncate">
                             {card.name}
                           </span>
 
-                          <span className="text-xs text-[#3F7FA8] mt-1 block">
+                          <span className="text-[11px] min-[390px]:text-xs text-[#3F7FA8] mt-0.5 block truncate">
                             {card.techSummary}
                           </span>
                         </div>
 
                         {/* Mini UI Sketch Component */}
-                        <div className="w-12 h-9 rounded-md border border-[#7DD3FC] bg-[#F0F9FF] p-1.5 flex flex-col justify-between shadow-xs shrink-0 ms-2">
+                        <div className="w-10 h-8 min-[390px]:w-11 min-[390px]:h-8.5 rounded-md border border-[#7DD3FC] bg-[#F0F9FF] p-1 flex flex-col justify-between shadow-xs shrink-0 ms-1">
                           <div className="h-1.5 rounded-full bg-[#0EA5E9]" />
                           <div className="flex gap-1">
-                            <div className="w-4 h-1.5 rounded-full bg-[#7DD3FC]" />
+                            <div className="w-3.5 h-1.5 rounded-full bg-[#7DD3FC]" />
                             <div className="w-2 h-1.5 rounded-full bg-[#BAE6FD]" />
                           </div>
                         </div>
@@ -689,11 +704,11 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
                       {/* Middle: Expanded In-Front Content */}
                       {isFront && (
-                        <div className="my-2 p-2.5 rounded-xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs text-[#0C4A6E] animate-in fade-in duration-300">
-                          <div className="grid grid-cols-2 gap-1.5">
+                        <div className="my-1.5 min-[390px]:my-2 p-2 min-[390px]:p-2.5 rounded-xl bg-[#F0F9FF] border border-[#BAE6FD] text-xs text-[#0C4A6E] animate-in fade-in duration-300">
+                          <div className="grid grid-cols-2 gap-1 min-[390px]:gap-1.5">
                             {card.keySpecs.map((spec, i) => (
-                              <div key={i} className="flex items-center gap-1.5 text-[10px] text-[#0369A1]">
-                                <CheckCircle2 size={11} className="text-[#0EA5E9] shrink-0" />
+                              <div key={i} className="flex items-center gap-1 min-[390px]:gap-1.5 text-[9.5px] min-[390px]:text-[10.5px] text-[#0369A1]">
+                                <CheckCircle2 size={10} className="text-[#0EA5E9] shrink-0" />
                                 <span className="truncate">{spec}</span>
                               </div>
                             ))}
@@ -702,21 +717,21 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                       )}
 
                       {/* Bottom Footer / Action Bar */}
-                      <div className="flex items-center justify-between pt-2.5 border-t border-[#E0F2FE] text-xs font-mono text-[#0EA5E9]">
-                        <span className="flex items-center gap-1.5 text-[11px]">
-                          <span className="w-2 h-2 rounded-full bg-[#0EA5E9] inline-block" />
-                          <span>{card.metricsBadge}</span>
+                      <div className="flex items-center justify-between gap-1 pt-2 min-[390px]:pt-2.5 border-t border-[#E0F2FE] text-xs font-mono text-[#0EA5E9]">
+                        <span className="flex items-center gap-1.5 text-[10px] min-[390px]:text-[11px] max-w-[130px] min-[390px]:max-w-[170px] truncate">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] shrink-0 inline-block" />
+                          <span className="truncate">{card.metricsBadge}</span>
                         </span>
 
                         {isFront ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <Link
                               href={card.divisionHref}
                               onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0EA5E9] text-white font-sans font-medium text-xs hover:bg-[#0284C7] transition-all shadow-xs"
+                              className="inline-flex items-center gap-1 px-2.5 min-[390px]:px-3 py-1 rounded-full bg-[#0EA5E9] text-white font-sans font-medium text-[11px] min-[390px]:text-xs hover:bg-[#0284C7] transition-all shadow-xs shrink-0"
                             >
-                              <span>Enter Division</span>
-                              <ExternalLink size={12} />
+                              <span>{isMobile ? (isRTL ? 'استكشف' : 'Explore') : (isRTL ? 'دخول القسم' : 'Enter Division')}</span>
+                              <ExternalLink size={11} />
                             </Link>
                             <button
                               type="button"
@@ -724,16 +739,16 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                                 e.stopPropagation();
                                 setActiveLayer(null);
                               }}
-                              className="p-1 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0C4A6E] transition-colors cursor-pointer"
+                              className="p-1 rounded-full bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0C4A6E] transition-colors cursor-pointer shrink-0"
                               title="Return to Stack"
                             >
-                              <X size={14} />
+                              <X size={13} />
                             </button>
                           </div>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] text-[#0EA5E9] group-hover:translate-x-1 transition-all">
-                            <span>Enter Division</span>
-                            <ArrowUpRight size={14} />
+                          <span className="inline-flex items-center gap-1 text-[10px] min-[390px]:text-[11px] text-[#0EA5E9] group-hover:translate-x-1 transition-all shrink-0">
+                            <span>{isRTL ? 'عرض القسم' : 'Enter Division'}</span>
+                            <ArrowUpRight size={13} />
                           </span>
                         )}
                       </div>

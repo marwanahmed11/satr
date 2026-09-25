@@ -226,7 +226,7 @@ export function HowWeWork() {
                 >
                   {/* Rounded Square Button Badge */}
                   <div 
-                    className={`relative w-[44px] h-[44px] min-[390px]:w-[52px] min-[390px]:h-[52px] sm:w-[60px] sm:h-[60px] rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                    className={`relative w-[42px] h-[42px] min-[390px]:w-[50px] min-[390px]:h-[50px] sm:w-[60px] sm:h-[60px] rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300 ${
                       isFilled
                         ? 'bg-[#0EA5E9] text-white shadow-[0_6px_18px_-2px_rgba(14,165,233,0.4)] hover:brightness-105 hover:scale-105'
                         : 'bg-[#E0F2FE] text-[#0EA5E9] hover:bg-[#BAE6FD] hover:scale-105'
@@ -244,7 +244,7 @@ export function HowWeWork() {
 
                   {/* Stage Label Below Badge */}
                   <span 
-                    className={`mt-2 sm:mt-3.5 text-[11px] sm:text-base transition-colors ${
+                    className={`mt-1.5 sm:mt-3.5 text-[10px] min-[390px]:text-[11px] sm:text-base transition-colors text-center ${
                       isCurrent 
                         ? 'text-[#0C4A6E] font-bold' 
                         : 'text-[#0C4A6E] font-medium group-hover:text-[#0EA5E9]'
@@ -300,13 +300,13 @@ export function HowWeWork() {
             <span className="font-mono text-xs text-[#3F7FA8] uppercase tracking-wider block mb-3">
               DELIVERABLES & ARCHITECTURAL OUTCOMES
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5">
               {current.deliverables.map((item, i) => (
                 <div 
                   key={i}
-                  className="p-3.5 rounded-xl bg-white border border-[#E0F2FE] shadow-2xs flex items-start gap-2.5 transition-all hover:border-[#BAE6FD]"
+                  className="p-3 sm:p-3.5 rounded-xl bg-white border border-[#E0F2FE] shadow-2xs flex items-start gap-2.5 transition-all hover:border-[#BAE6FD]"
                 >
-                  <CheckCircle2 size={16} className="text-[#0EA5E9] shrink-0 mt-0.5" />
+                  <CheckCircle2 size={15} className="text-[#0EA5E9] shrink-0 mt-0.5" />
                   <span className="text-xs sm:text-sm text-[#0C4A6E] leading-relaxed">
                     {item}
                   </span>

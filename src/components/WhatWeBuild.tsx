@@ -103,7 +103,7 @@ export function WhatWeBuild() {
           <h2 className="section-heading">{t('services.heading')}</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-12">
           {services.map((s) => (
             <Link
               key={s.slug}
@@ -113,7 +113,7 @@ export function WhatWeBuild() {
               <div
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                className="h-full rounded-2xl border border-[#D6E6F2] p-8 bg-gradient-to-b from-white to-[#F0F9FF] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:border-[#7DD3FC] hover:shadow-[0_22px_42px_-20px_rgba(12,74,110,0.4)] transition-all duration-300 [perspective:800px]"
+                className="h-full rounded-2xl border border-[#D6E6F2] p-5 sm:p-8 bg-gradient-to-b from-white to-[#F0F9FF] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:border-[#7DD3FC] hover:shadow-[0_22px_42px_-20px_rgba(12,74,110,0.4)] transition-all duration-300 [perspective:800px] active:scale-[0.99]"
               >
                 <div className="tilt-inner transition-transform duration-200 ease-out [transform-style:preserve-3d]">
                   
