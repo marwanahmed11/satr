@@ -23,7 +23,7 @@ interface CaseStudyData {
 const studyDatabase: Record<string, CaseStudyData> = {
   'fintech-banking-platform': {
     title: 'Global fintech platform',
-    client: 'Apex Capital [PLACEHOLDER]',
+    client: 'Apex Capital',
     year: '2026',
     tags: ['Web', 'Security', 'Cloud', 'Software'],
     challenge: 'A growing fintech firm struggling with fragmented payment gateways, high reconciliation delays, and latency during high-volume end-of-month clearing cycles.',
@@ -38,7 +38,7 @@ const studyDatabase: Record<string, CaseStudyData> = {
   },
   'retail-commerce-platform': {
     title: 'Retail commerce platform',
-    client: 'Velvet Goods [PLACEHOLDER]',
+    client: 'Velvet Goods',
     year: '2025',
     tags: ['Mobile', 'Commerce', 'AI', 'Cloud'],
     challenge: 'High cart abandonment on mobile devices due to slow monolithic store architecture and lack of personalized product curation for multi-country shoppers.',
@@ -53,7 +53,7 @@ const studyDatabase: Record<string, CaseStudyData> = {
   },
   'saas-analytics-engine': {
     title: 'Enterprise AI telemetry platform',
-    client: 'DataPulse Cloud [PLACEHOLDER]',
+    client: 'DataPulse Cloud',
     year: '2026',
     tags: ['AI', 'SaaS', 'Cloud'],
     challenge: 'Enterprises managing autonomous LLM agents had no unified observability into inference latency, hallucinations, or token spend spikes across production clusters.',
@@ -124,8 +124,8 @@ export default function CaseStudyPage() {
           {/* Interactive Node Graph */}
           <div className="relative py-12 px-6 rounded-2xl bg-white border border-[#D6E6F2] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] flex flex-col items-center justify-center min-h-[360px]">
             
-            {/* SVG Connecting Sky Lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-[#7DD3FC] stroke-2 stroke-dasharray-[4_4]">
+            {/* SVG Connecting Sky Lines (Desktop) */}
+            <svg className="hidden sm:block absolute inset-0 w-full h-full pointer-events-none stroke-[#7DD3FC] stroke-2 stroke-dasharray-[4_4]">
               <line x1="50%" y1="50%" x2="20%" y2="25%" />
               <line x1="50%" y1="50%" x2="80%" y2="25%" />
               <line x1="50%" y1="50%" x2="20%" y2="75%" />
@@ -133,10 +133,10 @@ export default function CaseStudyPage() {
             </svg>
 
             {/* Central Core Node */}
-            <div className="z-10 w-44 h-44 rounded-full bg-gradient-to-br from-[#0C4A6E] to-[#0EA5E9] text-white p-4 flex flex-col items-center justify-center text-center shadow-[0_14px_30px_-14px_rgba(14,165,233,0.8)] border-4 border-white">
-              <Layers size={28} className="mb-1 text-[#BAE6FD]" />
-              <span className="font-medium text-sm">Core Platform</span>
-              <span className="text-[10px] text-[#BAE6FD]">Central Orchestrator</span>
+            <div className="z-10 w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-br from-[#0C4A6E] to-[#0EA5E9] text-white p-3.5 sm:p-4 flex flex-col items-center justify-center text-center shadow-[0_14px_30px_-14px_rgba(14,165,233,0.8)] border-4 border-white shrink-0">
+              <Layers size={26} className="mb-1 text-[#BAE6FD]" />
+              <span className="font-medium text-xs sm:text-sm">Core Platform</span>
+              <span className="text-[9.5px] sm:text-[10px] text-[#BAE6FD]">Central Orchestrator</span>
             </div>
 
             {/* Connected Satellite Nodes */}

@@ -59,32 +59,32 @@ export function StatsBand() {
         <div className="grid grid-cols-1 md:grid-cols-3 text-center gap-8 md:gap-0">
           
           {/* Stat 1 */}
-          <div className="md:px-8 relative md:border-r border-[#BAE6FD]/25">
-            <div className="text-5xl sm:text-6xl font-medium tracking-tight mb-2">
+          <div className="pb-6 md:pb-0 border-b md:border-b-0 md:border-r border-[#BAE6FD]/25 md:px-8 relative">
+            <div className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-1.5 sm:mb-2">
               {counts.stat1}+
             </div>
-            <div className="text-sm font-normal text-[#BAE6FD]">
-              {t('stats.products')} [PLACEHOLDER]
+            <div className="text-xs sm:text-sm font-normal text-[#BAE6FD]">
+              {t('stats.products')}
             </div>
           </div>
 
           {/* Stat 2 */}
-          <div className="md:px-8 relative md:border-r border-[#BAE6FD]/25">
-            <div className="text-5xl sm:text-6xl font-medium tracking-tight mb-2">
+          <div className="pb-6 md:pb-0 border-b md:border-b-0 md:border-r border-[#BAE6FD]/25 md:px-8 relative">
+            <div className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-1.5 sm:mb-2">
               {counts.stat2}
             </div>
-            <div className="text-sm font-normal text-[#BAE6FD]">
+            <div className="text-xs sm:text-sm font-normal text-[#BAE6FD]">
               {t('stats.divisions')}
             </div>
           </div>
 
           {/* Stat 3 */}
           <div className="md:px-8">
-            <div className="text-5xl sm:text-6xl font-medium tracking-tight mb-2">
+            <div className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-1.5 sm:mb-2">
               {counts.stat3}
             </div>
-            <div className="text-sm font-normal text-[#BAE6FD]">
-              {t('stats.days')} [PLACEHOLDER]
+            <div className="text-xs sm:text-sm font-normal text-[#BAE6FD]">
+              {t('stats.days')}
             </div>
           </div>
 

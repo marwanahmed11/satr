@@ -95,8 +95,8 @@ export function WhatWeBuild() {
   };
 
   return (
-    <section className="py-24 bg-white" id="services">
-      <div className="w-full max-w-6xl mx-auto px-6">
+    <section className="py-16 sm:py-24 bg-white" id="services">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         
         <div>
           <span className="section-label">{t('services.label')}</span>
@@ -113,7 +113,7 @@ export function WhatWeBuild() {
               <div
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                className="h-full rounded-2xl border border-[#D6E6F2] p-5 sm:p-8 bg-gradient-to-b from-white to-[#F0F9FF] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:border-[#7DD3FC] hover:shadow-[0_22px_42px_-20px_rgba(12,74,110,0.4)] transition-all duration-300 [perspective:800px] active:scale-[0.99]"
+                className="h-full rounded-2xl border border-[#D6E6F2] p-4 min-[390px]:p-5 sm:p-8 bg-gradient-to-b from-white to-[#F0F9FF] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:border-[#7DD3FC] hover:shadow-[0_22px_42px_-20px_rgba(12,74,110,0.4)] transition-all duration-300 [perspective:800px] active:scale-[0.99]"
               >
                 <div className="tilt-inner transition-transform duration-200 ease-out [transform-style:preserve-3d]">
                   

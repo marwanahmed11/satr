@@ -23,7 +23,7 @@ const allProjects: Project[] = [
   {
     slug: 'fintech-banking-platform',
     title: 'Global fintech platform',
-    client: 'Apex Capital [PLACEHOLDER]',
+    client: 'Apex Capital',
     year: '2026',
     category: 'Software',
     tags: ['Web', 'Security', 'Cloud'],
@@ -34,7 +34,7 @@ const allProjects: Project[] = [
   {
     slug: 'retail-commerce-platform',
     title: 'Retail commerce platform',
-    client: 'Velvet Goods [PLACEHOLDER]',
+    client: 'Velvet Goods',
     year: '2025',
     category: 'Commerce',
     tags: ['Mobile', 'Commerce', 'AI'],
@@ -45,7 +45,7 @@ const allProjects: Project[] = [
   {
     slug: 'saas-analytics-engine',
     title: 'Enterprise telemetry dashboard',
-    client: 'DataPulse Cloud [PLACEHOLDER]',
+    client: 'DataPulse Cloud',
     year: '2026',
     category: 'SaaS',
     tags: ['SaaS', 'Cloud', 'AI'],
@@ -56,7 +56,7 @@ const allProjects: Project[] = [
   {
     slug: 'fintech-internal-portal',
     title: 'Automated lending core & ERP',
-    client: 'Apex Credit [PLACEHOLDER]',
+    client: 'Apex Credit',
     year: '2025',
     category: 'Software',
     tags: ['Software', 'Cloud'],
@@ -67,7 +67,7 @@ const allProjects: Project[] = [
   {
     slug: 'mobile-health-suite',
     title: 'Patient care iOS & Android suite',
-    client: 'CareLine Health [PLACEHOLDER]',
+    client: 'CareLine Health',
     year: '2025',
     category: 'Mobile',
     tags: ['Mobile', 'AI'],
@@ -78,7 +78,7 @@ const allProjects: Project[] = [
   {
     slug: 'autonomous-logistics-ai',
     title: 'Fleet dispatch AI dispatcher',
-    client: 'TransGlobal [PLACEHOLDER]',
+    client: 'TransGlobal Logistics',
     year: '2026',
     category: 'AI',
     tags: ['AI', 'Cloud', 'Software'],
@@ -102,23 +102,23 @@ export default function WorkPage() {
       <Navbar />
 
       {/* Header */}
-      <section className="pt-36 pb-16 bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-white">
-        <div className="w-full max-w-6xl mx-auto px-6 text-center">
+      <section className="pt-32 sm:pt-36 pb-12 sm:pb-16 bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-white">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 text-center">
           <span className="section-label">SELECTED WORK</span>
-          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight text-[#0C4A6E] mb-6">
+          <h1 className="text-3xl min-[380px]:text-4xl sm:text-6xl font-medium tracking-tight text-[#0C4A6E] mb-4 sm:mb-6">
             Real products.<br />Real growth.
           </h1>
-          <p className="text-lg text-[#3F7FA8] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-[#3F7FA8] max-w-2xl mx-auto leading-relaxed">
             Every product engineered by SATR is rooted in technical precision, architectural integrity, and tangible business metrics.
           </p>
 
           {/* Filter Chips */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-10">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-8 sm:mt-10">
             {filterCategories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
                   activeFilter === cat
                     ? 'bg-[#0EA5E9] text-white shadow-sm'
                     : 'bg-white/80 text-[#0C4A6E] border border-[#BAE6FD] hover:border-[#0EA5E9]'
@@ -132,8 +132,8 @@ export default function WorkPage() {
       </section>
 
       {/* Work Grid */}
-      <section className="py-16">
-        <div className="w-full max-w-6xl mx-auto px-6">
+      <section className="py-12 sm:py-16">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {filteredProjects.map((project) => (
               <Link 

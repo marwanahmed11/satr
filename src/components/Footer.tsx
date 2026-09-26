@@ -8,11 +8,11 @@ export function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="w-full bg-white border-t border-[#E0F2FE] pt-16 pb-8 overflow-hidden">
-      <div className="w-full max-w-6xl mx-auto px-6">
+    <footer className="w-full bg-white border-t border-[#E0F2FE] pt-12 sm:pt-16 pb-8 overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Top row */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-[#3F7FA8] mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-5 sm:gap-6 text-sm text-[#3F7FA8] mb-8 sm:mb-12">
           
           <div>
             <a 
@@ -23,7 +23,7 @@ export function Footer() {
             </a>
           </div>
 
-          <div className="flex items-center gap-6 flex-wrap justify-center">
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center text-xs sm:text-sm">
             <Link href="/work" className="hover:text-[#0EA5E9] transition-colors">
               {t('nav.work')}
             </Link>
@@ -41,7 +41,7 @@ export function Footer() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-5 sm:gap-6 flex-wrap justify-center">
+          <div className="flex items-center gap-3.5 sm:gap-6 flex-wrap justify-center text-xs sm:text-sm">
             <a 
               href="https://linkedin.com" 
               target="_blank" 

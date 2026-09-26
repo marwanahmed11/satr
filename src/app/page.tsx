@@ -95,7 +95,7 @@ export default function HomePage() {
             
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-[-0.05em] leading-[1.05] sm:leading-[1.0] text-[#0C4A6E] mb-4 sm:mb-5">
+            <h1 className="text-[34px] min-[380px]:text-4xl sm:text-6xl md:text-7xl lg:text-[80px] font-medium tracking-[-0.05em] leading-[1.05] sm:leading-[1.0] text-[#0C4A6E] mb-4 sm:mb-5">
               <span>{t('hero.title_p1')}</span><br />
               <span>{t('hero.title_p2')}</span>{' '}
               <span className="text-[#0EA5E9]">{t('hero.title_line')}</span>
@@ -117,7 +117,7 @@ export default function HomePage() {
 
             {/* Idea Box (Glass Pill with Sky Glow) */}
             <form onSubmit={handleIdeaSubmit} className="max-w-md relative">
-              <div className="glass-pill flex items-center p-1.5 ps-4 sm:ps-5 bg-white/85 focus-within:bg-white focus-within:border-[#0EA5E9] shadow-[0_14px_30px_-14px_rgba(14,165,233,0.6)] transition-all">
+              <div className="glass-pill flex items-center p-1.5 ps-3.5 min-[380px]:ps-5 bg-white/85 focus-within:bg-white focus-within:border-[#0EA5E9] shadow-[0_14px_30px_-14px_rgba(14,165,233,0.6)] transition-all">
                 <input
                   type="text"
                   value={ideaText}
@@ -126,11 +126,11 @@ export default function HomePage() {
                     if (ideaFeedback) setIdeaFeedback(null);
                   }}
                   placeholder={t('hero.input_placeholder')}
-                  className="flex-1 min-w-0 bg-transparent border-none outline-none text-[#0C4A6E] placeholder-[#94A3B8] text-base font-normal"
+                  className="flex-1 min-w-0 bg-transparent border-none outline-none text-[#0C4A6E] placeholder-[#94A3B8] text-sm min-[380px]:text-base font-normal"
                 />
                 <button
                   type="submit"
-                  className="btn-primary py-2.5 px-4 sm:px-5 text-xs sm:text-sm whitespace-nowrap shrink-0"
+                  className="btn-primary py-2.5 px-3.5 sm:px-5 text-xs sm:text-sm whitespace-nowrap shrink-0"
                 >
                   <span>{t('hero.build_btn')}</span>
                 </button>

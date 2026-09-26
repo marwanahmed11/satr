@@ -154,11 +154,11 @@ export function SelectedWork() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-b from-[#F5FAFF] via-white to-white" id="work">
-      <div className="w-full max-w-6xl mx-auto px-6">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-[#F5FAFF] via-white to-white" id="work">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-3 sm:gap-4">
           <div>
             <span className="section-label">{t('work.label')}</span>
             <h2 className="section-heading mb-0">{t('work.heading')}</h2>
@@ -172,13 +172,13 @@ export function SelectedWork() {
         </div>
 
         {/* 3 Resized Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {cards.map((card) => (
             <Link key={card.slug} href={`/work/${card.slug}`} className="block group">
               <div
                 onMouseMove={handleTilt}
                 onMouseLeave={handleResetTilt}
-                className={`rounded-2xl overflow-hidden p-5 sm:p-7 pb-0 min-h-[385px] sm:min-h-[430px] flex flex-col justify-between bg-gradient-to-br ${card.gradientClass} ${card.textColorClass} border ${card.borderColorClass} shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:shadow-[0_28px_50px_-20px_rgba(12,74,110,0.55)] transition-all duration-300 [perspective:900px] active:scale-[0.99]`}
+                className={`rounded-2xl overflow-hidden p-4 min-[390px]:p-5 sm:p-7 pb-0 min-h-[350px] sm:min-h-[430px] flex flex-col justify-between bg-gradient-to-br ${card.gradientClass} ${card.textColorClass} border ${card.borderColorClass} shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:shadow-[0_28px_50px_-20px_rgba(12,74,110,0.55)] transition-all duration-300 [perspective:900px] active:scale-[0.99]`}
               >
                 <div>
                   {/* Topic badge */}

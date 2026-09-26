@@ -79,21 +79,21 @@ export default function ContactPage() {
     <main className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="pt-36 pb-24 bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-white">
-        <div className="w-full max-w-4xl mx-auto px-6">
+      <section className="pt-32 sm:pt-36 pb-16 sm:pb-24 bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-white">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
           
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 sm:mb-12">
             <span className="section-label">START A PROJECT</span>
-            <h1 className="text-4xl sm:text-6xl font-medium tracking-tight text-[#0C4A6E] mb-4">
+            <h1 className="text-3xl min-[380px]:text-4xl sm:text-6xl font-medium tracking-tight text-[#0C4A6E] mb-3 sm:mb-4">
               Your idea is line one.
             </h1>
-            <p className="text-base sm:text-lg text-[#3F7FA8]">
+            <p className="text-sm sm:text-lg text-[#3F7FA8]">
               Scope your initiative step-by-step. We reply within 24 hours.
             </p>
           </div>
 
           {/* Interactive Chat-Style Card */}
-          <div className="bg-white rounded-2xl border border-[#D6E6F2] shadow-[0_25px_60px_-15px_rgba(12,74,110,0.4)] p-8 sm:p-12 relative">
+          <div className="bg-white rounded-2xl border border-[#D6E6F2] shadow-[0_25px_60px_-15px_rgba(12,74,110,0.4)] p-5 sm:p-12 relative">
             
             {/* Step 1 */}
             {step === 1 && (

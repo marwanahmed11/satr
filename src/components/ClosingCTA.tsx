@@ -9,9 +9,9 @@ export function ClosingCTA({ onOpenContact }: { onOpenContact?: () => void }) {
 
   return (
     <section className="py-12 sm:py-16 md:py-20 bg-white">
-      <div className="w-full max-w-5xl mx-auto px-6">
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6">
         
-        <div className="relative rounded-2xl sm:rounded-[24px] bg-gradient-to-br from-[#0C4A6E] via-[#0369A1] to-[#0EA5E9] py-12 sm:py-16 px-6 sm:px-10 text-center text-white overflow-hidden shadow-[0_20px_45px_-15px_rgba(12,74,110,0.45)]">
+        <div className="relative rounded-2xl sm:rounded-[24px] bg-gradient-to-br from-[#0C4A6E] via-[#0369A1] to-[#0EA5E9] py-10 sm:py-16 px-4 min-[390px]:px-6 sm:px-10 text-center text-white overflow-hidden shadow-[0_20px_45px_-15px_rgba(12,74,110,0.45)]">
           
           {/* Two thin 3D orbiting rings in opposite directions, scaled responsively */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none [perspective:900px] overflow-hidden">

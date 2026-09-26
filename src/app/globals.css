@@ -216,14 +216,15 @@
 
 /* Giant 3D extruded text */
 .giant-satr-text {
-  font-size: clamp(80px, 19vw, 240px);
+  font-size: clamp(52px, 17vw, 240px);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: clamp(0.04em, 1.5vw, 0.08em);
   position: relative;
   display: inline-block;
   color: transparent;
   -webkit-text-stroke: 1.5px var(--satr-light-sky);
   user-select: none;
+  max-width: 100%;
 }
 
 .giant-satr-text::before {
@@ -231,7 +232,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(6px, 6px);
+  transform: translate(clamp(3px, 1vw, 6px), clamp(3px, 1vw, 6px));
   color: var(--satr-ice);
   -webkit-text-stroke: 1px var(--satr-border);
   z-index: -1;
@@ -242,7 +243,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(12px, 12px);
+  transform: translate(clamp(6px, 2vw, 12px), clamp(6px, 2vw, 12px));
   color: var(--satr-mist);
   -webkit-text-stroke: 1px var(--satr-border-soft);
   z-index: -2;

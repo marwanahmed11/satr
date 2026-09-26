@@ -162,10 +162,10 @@ export function HowWeWork() {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="w-full max-w-5xl mx-auto px-6 sm:px-8">
+      <div className="w-full max-w-5xl mx-auto px-3.5 min-[390px]:px-6 sm:px-8">
         
         {/* Header Label & Autoplay Status */}
-        <div className="mb-10 flex items-center justify-between">
+        <div className="mb-8 sm:mb-10 flex items-center justify-between">
           <div className="text-left rtl:text-right">
             <span className="font-mono text-xs font-semibold text-[#0EA5E9] tracking-[0.22em] uppercase inline-block">
               {t('process.label')}
@@ -177,10 +177,10 @@ export function HowWeWork() {
             <button
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F9FF] border border-[#BAE6FD] text-[#0369A1] hover:bg-[#E0F2FE] transition-colors text-xs font-mono cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F9FF] border border-[#BAE6FD] text-[#0369A1] hover:bg-[#E0F2FE] transition-colors text-[11px] sm:text-xs font-mono cursor-pointer"
               title={isPaused ? "Resume automatic cycling" : "Pause automatic cycling"}
             >
-              {isPaused ? <Play size={11} className="text-[#0EA5E9]" /> : <Pause size={11} className="text-[#0EA5E9]" />}
+              {isPaused ? <Play size={10} className="text-[#0EA5E9]" /> : <Pause size={10} className="text-[#0EA5E9]" />}
               <span>{isPaused ? (isRTL ? 'إيقاف مؤقت' : 'Paused') : (isRTL ? 'تشغيل تلقائي' : 'Auto-cycling')}</span>
               {!isPaused && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] animate-ping" />
@@ -190,10 +190,10 @@ export function HowWeWork() {
         </div>
 
         {/* Clean Horizontal Connected Stepper (100% faithful to reference mockup) */}
-        <div className="relative mb-10 sm:mb-14">
+        <div className="relative mb-8 sm:mb-14">
           
           {/* Continuous Connecting Line Running Behind All Icons */}
-          <div className="absolute top-[22px] min-[390px]:top-[26px] sm:top-[30px] left-[22px] min-[390px]:left-[26px] sm:left-[30px] right-[22px] min-[390px]:right-[26px] sm:right-[30px] h-[2px] bg-[#BAE6FD] z-0 overflow-hidden">
+          <div className="absolute top-[18px] min-[360px]:top-[21px] min-[390px]:top-[25px] sm:top-[30px] left-[18px] min-[360px]:left-[21px] min-[390px]:left-[25px] sm:left-[30px] right-[18px] min-[360px]:right-[21px] min-[390px]:right-[25px] sm:right-[30px] h-[2px] bg-[#BAE6FD] z-0 overflow-hidden">
             {/* Animated progression track matching active selection */}
             <div 
               style={{ 
@@ -226,13 +226,13 @@ export function HowWeWork() {
                 >
                   {/* Rounded Square Button Badge */}
                   <div 
-                    className={`relative w-[42px] h-[42px] min-[390px]:w-[50px] min-[390px]:h-[50px] sm:w-[60px] sm:h-[60px] rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                    className={`relative w-[36px] h-[36px] min-[360px]:w-[42px] min-[360px]:h-[42px] min-[390px]:w-[50px] min-[390px]:h-[50px] sm:w-[60px] sm:h-[60px] rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300 ${
                       isFilled
                         ? 'bg-[#0EA5E9] text-white shadow-[0_6px_18px_-2px_rgba(14,165,233,0.4)] hover:brightness-105 hover:scale-105'
                         : 'bg-[#E0F2FE] text-[#0EA5E9] hover:bg-[#BAE6FD] hover:scale-105'
-                    } ${isCurrent ? 'ring-3 sm:ring-4 ring-[#BAE6FD]/80 scale-105 shadow-[0_8px_24px_-2px_rgba(14,165,233,0.5)]' : ''}`}
+                    } ${isCurrent ? 'ring-2 min-[360px]:ring-3 sm:ring-4 ring-[#BAE6FD]/80 scale-105 shadow-[0_8px_24px_-2px_rgba(14,165,233,0.5)]' : ''}`}
                   >
-                    <div className="scale-75 min-[390px]:scale-90 sm:scale-100 flex items-center justify-center">
+                    <div className="scale-[0.68] min-[360px]:scale-75 min-[390px]:scale-90 sm:scale-100 flex items-center justify-center">
                       {renderStepIcon(idx, isFilled)}
                     </div>
 
@@ -244,7 +244,7 @@ export function HowWeWork() {
 
                   {/* Stage Label Below Badge */}
                   <span 
-                    className={`mt-1.5 sm:mt-3.5 text-[10px] min-[390px]:text-[11px] sm:text-base transition-colors text-center ${
+                    className={`mt-1.5 sm:mt-3.5 text-[9.5px] min-[360px]:text-[10px] min-[390px]:text-[11px] sm:text-base transition-colors text-center ${
                       isCurrent 
                         ? 'text-[#0C4A6E] font-bold' 
                         : 'text-[#0C4A6E] font-medium group-hover:text-[#0EA5E9]'

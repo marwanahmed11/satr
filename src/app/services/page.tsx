@@ -75,26 +75,26 @@ export default function ServicesPage() {
       <Navbar />
 
       {/* Header Banner */}
-      <section className="pt-36 pb-20 bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-white">
-        <div className="w-full max-w-6xl mx-auto px-6 text-center">
+      <section className="pt-32 sm:pt-36 pb-16 sm:pb-20 bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-white">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 text-center">
           <span className="section-label">OUR CAPABILITIES</span>
-          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight text-[#0C4A6E] mb-6">
+          <h1 className="text-3xl min-[380px]:text-4xl sm:text-6xl font-medium tracking-tight text-[#0C4A6E] mb-4 sm:mb-6">
             Seven digital layers.<br />One unified team.
           </h1>
-          <p className="text-lg text-[#3F7FA8] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-[#3F7FA8] max-w-2xl mx-auto leading-relaxed">
             From the initial line of code to global cloud scaling, SATR bridges technical depth with bespoke product design.
           </p>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="py-16">
-        <div className="w-full max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-12 sm:py-16">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {divisions.map((div) => (
               <div 
                 key={div.slug}
-                className="rounded-2xl border border-[#D6E6F2] p-8 bg-gradient-to-b from-white to-[#F0F9FF] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:border-[#7DD3FC] hover:shadow-[0_22px_42px_-20px_rgba(12,74,110,0.4)] transition-all duration-300 flex flex-col justify-between"
+                className="rounded-2xl border border-[#D6E6F2] p-5 sm:p-8 bg-gradient-to-b from-white to-[#F0F9FF] shadow-[0_18px_30px_-22px_rgba(12,74,110,0.45)] hover:border-[#7DD3FC] hover:shadow-[0_22px_42px_-20px_rgba(12,74,110,0.4)] transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7DD3FC] to-[#0369A1] text-white flex items-center justify-center shadow-md mb-6">

@@ -50,6 +50,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   const [isExploded, setIsExploded] = useState(false);
   const [mouseTilt, setMouseTilt] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileViewMode, setMobileViewMode] = useState<'3d' | 'cards'>('3d');
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile/tablet viewport (<1024px)
@@ -177,7 +178,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
       // translateY(38px) balances the projection vertically so the top header and title are completely visible
       return {
         transform: isMobile
-          ? 'translateZ(50px) translateY(38px) rotateZ(36deg) rotateX(-56deg) scale(0.96)'
+          ? 'translateZ(45px) translateY(22px) rotateZ(36deg) rotateX(-56deg) scale(0.92)'
           : 'translateZ(180px) translateY(38px) rotateZ(36deg) rotateX(-56deg) scale(1.04)',
         zIndex: 50,
         opacity: 1,
@@ -402,76 +403,207 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
           {/* =======================================================
               Right Column: Unobstructed 3D Stack Stage
              ======================================================= */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center">
+          <div className="lg:col-span-7 flex flex-col items-center justify-center w-full">
             
-            {/* Mobile 3D Layer Controller Bar - visible only on mobile/tablet */}
+            {/* Mobile View Switcher & 3D Layer Controller Bar */}
             <div className="w-full max-w-sm mx-auto p-2.5 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-4 block lg:hidden shadow-xs">
-              <div className="flex items-center justify-between mb-1.5 px-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#0369A1] font-semibold">
-                  {isRTL ? 'التحكم بالطبقات 3D:' : '3D LAYER CONTROLS:'}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveLayer(null);
-                    setIsExploded(!isExploded);
-                  }}
-                  className="text-[10px] font-mono text-[#3F7FA8] hover:text-[#0C4A6E] flex items-center gap-1 cursor-pointer"
-                  title="Toggle exploded 3D spacing"
-                >
-                  <Layers size={11} />
-                  <span>{isExploded && !activeLayer ? (isRTL ? 'تجميع' : 'Compact Deck') : (isRTL ? 'تفريق 3D' : 'Explode 3D')}</span>
-                </button>
+              <div className="flex items-center justify-between gap-1 mb-2 pb-2 border-b border-[#E0F2FE]">
+                {/* View Mode Toggle: 3D Stage vs Card Deck */}
+                <div className="flex items-center gap-1 bg-white p-0.5 rounded-xl border border-[#BAE6FD]/80">
+                  <button
+                    type="button"
+                    onClick={() => setMobileViewMode('3d')}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium transition-all ${
+                      mobileViewMode === '3d'
+                        ? 'bg-[#0EA5E9] text-white shadow-2xs'
+                        : 'text-[#3F7FA8] hover:text-[#0C4A6E]'
+                    }`}
+                  >
+                    {isRTL ? '🧊 مجسم 3D' : '🧊 3D Stage'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMobileViewMode('cards')}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium transition-all ${
+                      mobileViewMode === 'cards'
+                        ? 'bg-[#0EA5E9] text-white shadow-2xs'
+                        : 'text-[#3F7FA8] hover:text-[#0C4A6E]'
+                    }`}
+                  >
+                    {isRTL ? '📱 بطاقات مفرودة' : '📱 Card List'}
+                  </button>
+                </div>
+
+                {mobileViewMode === '3d' && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveLayer(null);
+                      setIsExploded(!isExploded);
+                    }}
+                    className="text-[10px] font-mono text-[#3F7FA8] hover:text-[#0C4A6E] flex items-center gap-1 cursor-pointer px-1.5 py-1"
+                    title="Toggle exploded 3D spacing"
+                  >
+                    <Layers size={11} />
+                    <span>{isExploded && !activeLayer ? (isRTL ? 'تجميع' : 'Compact') : (isRTL ? 'تفريق 3D' : 'Explode')}</span>
+                  </button>
+                )}
               </div>
 
-              <div className="grid grid-cols-3 gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
-                  className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
-                    activeLayer === 'design'
-                      ? 'bg-[#0EA5E9] text-white shadow-xs'
-                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                  }`}
-                >
-                  <Palette size={12} className="shrink-0" />
-                  <span className="truncate">03 Design</span>
-                </button>
+              {/* 3D Quick Selection Buttons (shown in 3D mode) */}
+              {mobileViewMode === '3d' && (
+                <div className="grid grid-cols-3 gap-1.5 animate-in fade-in duration-200">
+                  <button
+                    type="button"
+                    onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
+                    className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                      activeLayer === 'design'
+                        ? 'bg-[#0EA5E9] text-white shadow-xs'
+                        : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                    }`}
+                  >
+                    <Palette size={12} className="shrink-0" />
+                    <span className="truncate">03 Design</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
-                  className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
-                    activeLayer === 'code'
-                      ? 'bg-[#0284C7] text-white shadow-xs'
-                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                  }`}
-                >
-                  <Brackets size={12} className="shrink-0" />
-                  <span className="truncate">02 Code</span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
+                    className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                      activeLayer === 'code'
+                        ? 'bg-[#0284C7] text-white shadow-xs'
+                        : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                    }`}
+                  >
+                    <Brackets size={12} className="shrink-0" />
+                    <span className="truncate">02 Code</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
-                  className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
-                    activeLayer === 'infra'
-                      ? 'bg-[#0C4A6E] text-white shadow-xs'
-                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                  }`}
-                >
-                  <Server size={12} className="shrink-0" />
-                  <span className="truncate">01 Infra</span>
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
+                    className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                      activeLayer === 'infra'
+                        ? 'bg-[#0C4A6E] text-white shadow-xs'
+                        : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
+                    }`}
+                  >
+                    <Server size={12} className="shrink-0" />
+                    <span className="truncate">01 Infra</span>
+                  </button>
+                </div>
+              )}
             </div>
 
-            {/* 3D Viewport Container */}
+            {/* Mobile Flat Interactive Cards List (Activated when in Card List mode) */}
+            {mobileViewMode === 'cards' && (
+              <div className="w-full max-w-sm mx-auto flex flex-col gap-3 block lg:hidden mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                {layers.map((card) => {
+                  const isExpanded = activeLayer === card.id;
+                  return (
+                    <div
+                      key={`mob-card-${card.id}`}
+                      onClick={() => setActiveLayer(isExpanded ? null : card.id)}
+                      className={`rounded-2xl transition-all duration-300 p-4 border cursor-pointer ${
+                        card.id === 'design'
+                          ? 'bg-white border-[#7DD3FC] text-[#0C4A6E]'
+                          : card.id === 'code'
+                            ? 'bg-gradient-to-br from-[#0284C7] via-[#0369A1] to-[#0C4A6E] border-white/60 text-white'
+                            : 'bg-gradient-to-br from-[#082F49] via-[#0C4A6E] to-[#041926] border-[#38BDF8]/40 text-white'
+                      } ${
+                        isExpanded
+                          ? 'shadow-[0_18px_40px_-12px_rgba(14,165,233,0.5)] ring-2 ring-[#0EA5E9]'
+                          : 'shadow-[0_8px_20px_-10px_rgba(12,74,110,0.2)]'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <span className={`font-mono text-[10px] tracking-wider uppercase font-semibold ${
+                              card.id === 'design' ? 'text-[#0EA5E9]' : 'text-[#7DD3FC]'
+                            }`}>
+                              LAYER {card.layerNum} · {card.subTitle}
+                            </span>
+                          </div>
+
+                          <h3 className={`text-lg font-medium tracking-tight ${
+                            card.id === 'design' ? 'text-[#0C4A6E]' : 'text-white'
+                          }`}>
+                            {card.name}
+                          </h3>
+
+                          <p className={`text-[11px] mt-0.5 truncate ${
+                            card.id === 'design' ? 'text-[#3F7FA8]' : 'text-[#BAE6FD]/85'
+                          }`}>
+                            {card.techSummary}
+                          </p>
+                        </div>
+
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ms-2 border ${
+                          card.id === 'design'
+                            ? 'bg-[#F0F9FF] text-[#0EA5E9] border-[#BAE6FD]'
+                            : 'bg-white/10 text-white border-white/20'
+                        }`}>
+                          {card.id === 'design' ? <Palette size={16} /> : card.id === 'code' ? <Brackets size={16} /> : <Server size={16} />}
+                        </div>
+                      </div>
+
+                      {/* Expandable Specifications */}
+                      {isExpanded && (
+                        <div className="mt-3 pt-3 border-t border-current/15 animate-in fade-in duration-200">
+                          <p className={`text-xs leading-relaxed mb-2.5 ${
+                            card.id === 'design' ? 'text-[#0C4A6E]' : 'text-white/90'
+                          }`}>
+                            {card.description}
+                          </p>
+
+                          <div className="grid grid-cols-2 gap-1.5 mb-3">
+                            {card.keySpecs.map((spec, i) => (
+                              <div key={i} className={`flex items-center gap-1 text-[10px] ${
+                                card.id === 'design' ? 'text-[#0369A1]' : 'text-white'
+                              }`}>
+                                <CheckCircle2 size={11} className={card.id === 'design' ? 'text-[#0EA5E9]' : 'text-[#38BDF8]'} />
+                                <span className="truncate">{spec}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-current/10">
+                            <span className={`text-[9.5px] font-mono px-2 py-0.5 rounded-full ${
+                              card.id === 'design' ? 'bg-[#F0F9FF] text-[#0284C7]' : 'bg-white/20 text-white'
+                            }`}>
+                              {card.metricsBadge}
+                            </span>
+
+                            <Link
+                              href={card.divisionHref}
+                              onClick={(e) => e.stopPropagation()}
+                              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                                card.id === 'design'
+                                  ? 'bg-[#0EA5E9] text-white hover:bg-[#0284C7]'
+                                  : 'bg-white text-[#0C4A6E] hover:bg-[#BAE6FD]'
+                              }`}
+                            >
+                              <span>{isRTL ? `دخول قسم ${card.name}` : `Explore Division`}</span>
+                              <ArrowRight size={11} className="rtl:rotate-180" />
+                            </Link>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* 3D Viewport Container (Hidden on mobile if Card List mode is selected) */}
             <div 
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-[460px] min-[390px]:h-[480px] sm:h-[550px] flex items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none"
+              className={`relative w-full h-[470px] min-[390px]:h-[490px] sm:h-[550px] items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none ${
+                mobileViewMode === 'cards' ? 'hidden lg:flex' : 'flex'
+              }`}
             >
               
               {/* Ambient 3D ground grid circle */}
@@ -489,7 +621,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
                 style={{
                   transform: `rotateX(${baseRotateX}deg) rotateZ(${baseRotateZ}deg)`,
                 }}
-                className="relative w-[270px] min-[390px]:w-[305px] sm:w-[380px] h-[260px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.82] min-[390px]:scale-[0.90] sm:scale-100"
+                className="relative w-[260px] min-[375px]:w-[285px] min-[390px]:w-[305px] sm:w-[380px] h-[250px] min-[375px]:h-[265px] min-[390px]:h-[275px] sm:h-[280px] [transform-style:preserve-3d] transition-transform duration-500 ease-out scale-[0.76] min-[375px]:scale-[0.84] min-[414px]:scale-[0.92] sm:scale-100"
               >
                 
                 {/* ===================================================
@@ -823,7 +955,7 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
             </div>
 
             {/* Clean Hint & Quick Link below 3D canvas */}
-            <div className="mt-3 text-center flex flex-col items-center gap-2">
+            <div className={`mt-3 text-center flex flex-col items-center gap-2 ${mobileViewMode === 'cards' ? 'hidden lg:flex' : 'flex'}`}>
               <p className="text-[11px] font-mono text-[#3F7FA8] flex items-center justify-center gap-1.5">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
                 <span>
