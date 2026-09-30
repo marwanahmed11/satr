@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="16" fill="#0C4A6E"/>
+  <text x="14" y="44" font-family="monospace, 'Courier New', monospace" font-size="34" font-weight="300" fill="#E0F2FE">{</text>
+  <circle cx="32" cy="32" r="4.5" fill="#0EA5E9"/>
+  <circle cx="32" cy="32" r="7.5" fill="#0EA5E9" fill-opacity="0.35"/>
+  <text x="38" y="44" font-family="monospace, 'Courier New', monospace" font-size="34" font-weight="300" fill="#E0F2FE">}</text>
+</svg>

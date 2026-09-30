@@ -74,10 +74,10 @@ const divisionData: Record<string, DivisionDetail> = {
     ],
     deliverables: ['Full-Stack SaaS Codebase', 'Billing & Invoicing Engine', 'Tenant Isolation Architecture', 'Documentation'],
     relatedCaseStudy: {
-      title: 'Real estate ecosystem',
-      slug: 'real-estate-ecosystem',
-      desc: 'B2B subscription portal for asset managers and prospective buyers.',
-      tags: 'SaaS · Infrastructure',
+      title: 'Enterprise AI telemetry dashboard',
+      slug: 'saas-analytics-engine',
+      desc: 'Predictive server scaling, token observability, and real-time enterprise telemetry tracking 40M+ daily events.',
+      tags: 'SaaS · Cloud · AI',
     },
   },
   software: {
@@ -93,10 +93,10 @@ const divisionData: Record<string, DivisionDetail> = {
     ],
     deliverables: ['Bespoke Database Schema', 'Role & Permission Hierarchy', 'REST/GraphQL APIs', 'Operational UI'],
     relatedCaseStudy: {
-      title: 'Real estate ecosystem',
-      slug: 'real-estate-ecosystem',
-      desc: 'Automated deal flow and client communication system for 40+ brokers.',
-      tags: 'Software · CRM',
+      title: 'Automated lending core & ERP',
+      slug: 'fintech-internal-portal',
+      desc: 'Internal compliance and underwriting engine automating risk calculation in 3.4 seconds.',
+      tags: 'Software · Cloud · ERP',
     },
   },
   commerce: {
@@ -131,10 +131,10 @@ const divisionData: Record<string, DivisionDetail> = {
     ],
     deliverables: ['Private RAG Pipeline', 'Custom AI Fine-tuning', 'Streaming Chat Interface', 'Guardrails & Auditing'],
     relatedCaseStudy: {
-      title: 'Retail commerce platform',
-      slug: 'retail-commerce-platform',
-      desc: 'Predictive product recommendations driving a 28% increase in average cart value.',
-      tags: 'AI · Commerce',
+      title: 'Fleet dispatch AI dispatcher',
+      slug: 'autonomous-logistics-ai',
+      desc: 'Autonomous AI routing agent optimizing freight distribution and reducing fuel spend by 19%.',
+      tags: 'AI · Cloud · Automation',
     },
   },
   cloud: {
@@ -150,10 +150,10 @@ const divisionData: Record<string, DivisionDetail> = {
     ],
     deliverables: ['Terraform Infrastructure as Code', 'Kubernetes / Container Setup', 'CI/CD Pipelines', 'Uptime SLA Monitoring'],
     relatedCaseStudy: {
-      title: 'Real estate ecosystem',
-      slug: 'real-estate-ecosystem',
-      desc: 'Multi-region cloud infrastructure supporting 99.99% uptime during peak launches.',
-      tags: 'Cloud · DevOps',
+      title: 'Global fintech banking core',
+      slug: 'fintech-banking-platform',
+      desc: 'Event-driven multi-region cloud infrastructure processing $12M+ in daily transaction volume.',
+      tags: 'Cloud · Security · Architecture',
     },
   },
 };

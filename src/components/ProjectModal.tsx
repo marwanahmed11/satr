@@ -56,7 +56,7 @@ export function ProjectModal({ isOpen, onClose, initialIdea = '' }: ProjectModal
     'Flexible',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim()) {
       setErrorMsg(
@@ -70,7 +70,6 @@ export function ProjectModal({ isOpen, onClose, initialIdea = '' }: ProjectModal
     setErrorMsg('');
     setStep(5); // Success step
 
-    // Store lead in localStorage
     const lead = {
       ...formData,
       layer: selectedLayer,
@@ -78,9 +77,22 @@ export function ProjectModal({ isOpen, onClose, initialIdea = '' }: ProjectModal
       timeline: selectedTimeline,
       date: new Date().toISOString(),
     };
+
+    // Store in localStorage as resilient backup
     const stored = JSON.parse(localStorage.getItem('satr_leads') || '[]');
     stored.push(lead);
     localStorage.setItem('satr_leads', JSON.stringify(stored));
+
+    // Send to Next.js API route
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lead),
+      });
+    } catch (err) {
+      console.error('Lead submission network error:', err);
+    }
   };
 
   return (

@@ -12,8 +12,7 @@ import {
   Sparkles, 
   CheckCircle2, 
   X,
-  ExternalLink,
-  Layers
+  ExternalLink
 } from 'lucide-react'; 
 import Link from 'next/link';
 
@@ -47,10 +46,8 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
   const [activeLayer, setActiveLayer] = useState<LayerId | null>(null);
   const [hoveredLayer, setHoveredLayer] = useState<LayerId | null>(null);
-  const [isExploded, setIsExploded] = useState(false);
   const [mouseTilt, setMouseTilt] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
-  const [mobileViewMode, setMobileViewMode] = useState<'3d' | 'cards'>('3d');
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile/tablet viewport (<1024px)
@@ -209,18 +206,12 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
       };
     }
 
-    // Default stacked view or exploded view
+    // Default stacked view
     const isHovered = hoveredLayer === layerId;
     let z = 0;
-    if (isExploded) {
-      if (layerId === 'infra') z = -20;
-      if (layerId === 'code') z = isMobile ? 65 : 120;
-      if (layerId === 'design') z = isMobile ? 130 : 260;
-    } else {
-      if (layerId === 'infra') z = 0;
-      if (layerId === 'code') z = isMobile ? 50 : 95;
-      if (layerId === 'design') z = isMobile ? 100 : 190;
-    }
+    if (layerId === 'infra') z = 0;
+    if (layerId === 'code') z = isMobile ? 50 : 95;
+    if (layerId === 'design') z = isMobile ? 100 : 190;
 
     if (isHovered && !isMobile) {
       z += 20;
@@ -240,370 +231,28 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
   const activeData = layers.find((l) => l.id === activeLayer);
 
   return (
-    <section className="py-16 sm:py-32 bg-gradient-to-b from-white via-[#F5FAFF] to-white overflow-hidden" id="stack">
+    <section className="py-16 sm:py-28 bg-gradient-to-b from-white via-[#F5FAFF] to-white overflow-hidden" id="stack">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-          
-          {/* =========================================
-              Left Column: Information & Controls
-             ========================================= */}
-          <div className="lg:col-span-5 max-w-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="section-label mb-0">{t('stack.label')}</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#E0F2FE] text-[#0369A1] font-medium">
-                3D INTERACTIVE
-              </span>
-            </div>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <span className="section-label">{t('stack.label')}</span>
+          <h2 className="section-heading mb-3 sm:mb-4">{t('stack.heading')}</h2>
+          <p className="text-sm sm:text-base text-[#3F7FA8] leading-relaxed">
+            {t('stack.text')}
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center justify-center w-full">
             
-            <h2 className="section-heading mb-4">{t('stack.heading')}</h2>
-            
-            <p className="text-[#3F7FA8] text-base mb-6 leading-relaxed">
-              {t('stack.text')}
-            </p>
 
-            {/* Dynamic Architecture Spec Box based on Active 3D Selection */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#BAE6FD] shadow-[0_15px_30px_-15px_rgba(12,74,110,0.08)] mb-5 transition-all duration-300">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-xs text-[#0369A1] uppercase tracking-wider font-semibold flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-[#0EA5E9]" />
-                  {activeData 
-                    ? `LAYER ${activeData.layerNum} · ${activeData.name.toUpperCase()}`
-                    : (isRTL ? 'معمارية الحزمة المتكاملة' : 'FULL STACK ARCHITECTURE')
-                  }
-                </span>
 
-                {activeLayer && (
-                  <button
-                    onClick={() => setActiveLayer(null)}
-                    className="text-[11px] font-mono text-[#0EA5E9] hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>{isRTL ? 'عرض الحزمة' : 'Stack View'}</span>
-                    <RotateCcw size={11} />
-                  </button>
-                )}
-              </div>
-
-              <p className="text-xs text-[#0C4A6E] leading-relaxed mb-3">
-                {activeData 
-                  ? activeData.description
-                  : (isRTL 
-                      ? 'المس أي بطاقة ثلاثية الأبعاد أدناه أو استخدم أزرار التحكم لفحص كل طبقة ومواصفاتها المعمارية بدقة.'
-                      : 'Touch any card on the right or click the buttons below to inspect each layer in full 3D with architectural specifications.')
-                }
-              </p>
-
-              {activeData ? (
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E0F2FE]">
-                  {activeData.keySpecs.map((spec, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-[11px] text-[#0369A1]">
-                      <CheckCircle2 size={12} className="text-[#0EA5E9] shrink-0" />
-                      <span className="truncate">{spec}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 pt-2 border-t border-[#E0F2FE] text-[11px] font-mono text-[#0284C7]">
-                  <span className="h-2 w-2 rounded-full bg-[#0EA5E9] animate-ping" />
-                  <span>{isRTL ? 'المس أي بطاقة لإبرازها في وضع 3D' : 'Click any card in the 3D stack to pop out'}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Clean Layer Controller Bar in Left Column (Desktop only - mobile gets controls directly above 3D canvas) */}
-            <div className="p-3 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-6 hidden lg:block">
-              <div className="flex items-center justify-between mb-2 px-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#0369A1] font-medium">
-                  {isRTL ? 'التحكم بالطبقات 3D:' : '3D LAYER CONTROLS:'}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveLayer(null);
-                    setIsExploded(!isExploded);
-                  }}
-                  className="text-[11px] font-mono text-[#3F7FA8] hover:text-[#0C4A6E] flex items-center gap-1 cursor-pointer"
-                  title="Toggle exploded 3D spacing"
-                >
-                  <Layers size={12} />
-                  <span>{isExploded && !activeLayer ? (isRTL ? 'تجميع' : 'Compact Deck') : (isRTL ? 'تفريق 3D' : 'Explode 3D')}</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
-                  className={`py-2 px-1.5 min-[390px]:px-2.5 rounded-xl text-[11px] min-[390px]:text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1 min-[390px]:gap-1.5 cursor-pointer ${
-                    activeLayer === 'design'
-                      ? 'bg-[#0EA5E9] text-white shadow-xs'
-                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                  }`}
-                >
-                  <Palette size={12} className="shrink-0" />
-                  <span className="truncate">03 Design</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
-                  className={`py-2 px-1.5 min-[390px]:px-2.5 rounded-xl text-[11px] min-[390px]:text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1 min-[390px]:gap-1.5 cursor-pointer ${
-                    activeLayer === 'code'
-                      ? 'bg-[#0284C7] text-white shadow-xs'
-                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                  }`}
-                >
-                  <Brackets size={12} className="shrink-0" />
-                  <span className="truncate">02 Code</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
-                  className={`py-2 px-1.5 min-[390px]:px-2.5 rounded-xl text-[11px] min-[390px]:text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1 min-[390px]:gap-1.5 cursor-pointer ${
-                    activeLayer === 'infra'
-                      ? 'bg-[#0C4A6E] text-white shadow-xs'
-                      : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                  }`}
-                >
-                  <Server size={12} className="shrink-0" />
-                  <span className="truncate">01 Infra</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href="/contact"
-                onClick={(e) => {
-                  if (onOpenContact) {
-                    e.preventDefault();
-                    onOpenContact();
-                  }
-                }}
-                className="btn-primary"
-              >
-                <span>{t('cta.button')}</span>
-                <ArrowRight size={16} />
-              </Link>
-
-              {activeData && (
-                <Link
-                  href={activeData.divisionHref}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#0EA5E9] text-[#0C4A6E] hover:bg-[#E0F2FE]/50 text-xs font-medium transition-all"
-                >
-                  <span>Explore {activeData.name} Division</span>
-                  <ArrowUpRight size={14} />
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {/* =======================================================
-              Right Column: Unobstructed 3D Stack Stage
-             ======================================================= */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center w-full">
-            
-            {/* Mobile View Switcher & 3D Layer Controller Bar */}
-            <div className="w-full max-w-sm mx-auto p-2.5 rounded-2xl bg-[#F0F9FF] border border-[#BAE6FD] mb-4 block lg:hidden shadow-xs">
-              <div className="flex items-center justify-between gap-1 mb-2 pb-2 border-b border-[#E0F2FE]">
-                {/* View Mode Toggle: 3D Stage vs Card Deck */}
-                <div className="flex items-center gap-1 bg-white p-0.5 rounded-xl border border-[#BAE6FD]/80">
-                  <button
-                    type="button"
-                    onClick={() => setMobileViewMode('3d')}
-                    className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium transition-all ${
-                      mobileViewMode === '3d'
-                        ? 'bg-[#0EA5E9] text-white shadow-2xs'
-                        : 'text-[#3F7FA8] hover:text-[#0C4A6E]'
-                    }`}
-                  >
-                    {isRTL ? '🧊 مجسم 3D' : '🧊 3D Stage'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMobileViewMode('cards')}
-                    className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium transition-all ${
-                      mobileViewMode === 'cards'
-                        ? 'bg-[#0EA5E9] text-white shadow-2xs'
-                        : 'text-[#3F7FA8] hover:text-[#0C4A6E]'
-                    }`}
-                  >
-                    {isRTL ? '📱 بطاقات مفرودة' : '📱 Card List'}
-                  </button>
-                </div>
-
-                {mobileViewMode === '3d' && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveLayer(null);
-                      setIsExploded(!isExploded);
-                    }}
-                    className="text-[10px] font-mono text-[#3F7FA8] hover:text-[#0C4A6E] flex items-center gap-1 cursor-pointer px-1.5 py-1"
-                    title="Toggle exploded 3D spacing"
-                  >
-                    <Layers size={11} />
-                    <span>{isExploded && !activeLayer ? (isRTL ? 'تجميع' : 'Compact') : (isRTL ? 'تفريق 3D' : 'Explode')}</span>
-                  </button>
-                )}
-              </div>
-
-              {/* 3D Quick Selection Buttons (shown in 3D mode) */}
-              {mobileViewMode === '3d' && (
-                <div className="grid grid-cols-3 gap-1.5 animate-in fade-in duration-200">
-                  <button
-                    type="button"
-                    onClick={() => setActiveLayer(activeLayer === 'design' ? null : 'design')}
-                    className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
-                      activeLayer === 'design'
-                        ? 'bg-[#0EA5E9] text-white shadow-xs'
-                        : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                    }`}
-                  >
-                    <Palette size={12} className="shrink-0" />
-                    <span className="truncate">03 Design</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveLayer(activeLayer === 'code' ? null : 'code')}
-                    className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
-                      activeLayer === 'code'
-                        ? 'bg-[#0284C7] text-white shadow-xs'
-                        : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                    }`}
-                  >
-                    <Brackets size={12} className="shrink-0" />
-                    <span className="truncate">02 Code</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveLayer(activeLayer === 'infra' ? null : 'infra')}
-                    className={`py-2 px-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
-                      activeLayer === 'infra'
-                        ? 'bg-[#0C4A6E] text-white shadow-xs'
-                        : 'bg-white hover:bg-[#E0F2FE] text-[#0C4A6E] border border-[#BAE6FD]'
-                    }`}
-                  >
-                    <Server size={12} className="shrink-0" />
-                    <span className="truncate">01 Infra</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Mobile Flat Interactive Cards List (Activated when in Card List mode) */}
-            {mobileViewMode === 'cards' && (
-              <div className="w-full max-w-sm mx-auto flex flex-col gap-3 block lg:hidden mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                {layers.map((card) => {
-                  const isExpanded = activeLayer === card.id;
-                  return (
-                    <div
-                      key={`mob-card-${card.id}`}
-                      onClick={() => setActiveLayer(isExpanded ? null : card.id)}
-                      className={`rounded-2xl transition-all duration-300 p-4 border cursor-pointer ${
-                        card.id === 'design'
-                          ? 'bg-white border-[#7DD3FC] text-[#0C4A6E]'
-                          : card.id === 'code'
-                            ? 'bg-gradient-to-br from-[#0284C7] via-[#0369A1] to-[#0C4A6E] border-white/60 text-white'
-                            : 'bg-gradient-to-br from-[#082F49] via-[#0C4A6E] to-[#041926] border-[#38BDF8]/40 text-white'
-                      } ${
-                        isExpanded
-                          ? 'shadow-[0_18px_40px_-12px_rgba(14,165,233,0.5)] ring-2 ring-[#0EA5E9]'
-                          : 'shadow-[0_8px_20px_-10px_rgba(12,74,110,0.2)]'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1.5 mb-1">
-                            <span className={`font-mono text-[10px] tracking-wider uppercase font-semibold ${
-                              card.id === 'design' ? 'text-[#0EA5E9]' : 'text-[#7DD3FC]'
-                            }`}>
-                              LAYER {card.layerNum} · {card.subTitle}
-                            </span>
-                          </div>
-
-                          <h3 className={`text-lg font-medium tracking-tight ${
-                            card.id === 'design' ? 'text-[#0C4A6E]' : 'text-white'
-                          }`}>
-                            {card.name}
-                          </h3>
-
-                          <p className={`text-[11px] mt-0.5 truncate ${
-                            card.id === 'design' ? 'text-[#3F7FA8]' : 'text-[#BAE6FD]/85'
-                          }`}>
-                            {card.techSummary}
-                          </p>
-                        </div>
-
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ms-2 border ${
-                          card.id === 'design'
-                            ? 'bg-[#F0F9FF] text-[#0EA5E9] border-[#BAE6FD]'
-                            : 'bg-white/10 text-white border-white/20'
-                        }`}>
-                          {card.id === 'design' ? <Palette size={16} /> : card.id === 'code' ? <Brackets size={16} /> : <Server size={16} />}
-                        </div>
-                      </div>
-
-                      {/* Expandable Specifications */}
-                      {isExpanded && (
-                        <div className="mt-3 pt-3 border-t border-current/15 animate-in fade-in duration-200">
-                          <p className={`text-xs leading-relaxed mb-2.5 ${
-                            card.id === 'design' ? 'text-[#0C4A6E]' : 'text-white/90'
-                          }`}>
-                            {card.description}
-                          </p>
-
-                          <div className="grid grid-cols-2 gap-1.5 mb-3">
-                            {card.keySpecs.map((spec, i) => (
-                              <div key={i} className={`flex items-center gap-1 text-[10px] ${
-                                card.id === 'design' ? 'text-[#0369A1]' : 'text-white'
-                              }`}>
-                                <CheckCircle2 size={11} className={card.id === 'design' ? 'text-[#0EA5E9]' : 'text-[#38BDF8]'} />
-                                <span className="truncate">{spec}</span>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="flex items-center justify-between pt-2 border-t border-current/10">
-                            <span className={`text-[9.5px] font-mono px-2 py-0.5 rounded-full ${
-                              card.id === 'design' ? 'bg-[#F0F9FF] text-[#0284C7]' : 'bg-white/20 text-white'
-                            }`}>
-                              {card.metricsBadge}
-                            </span>
-
-                            <Link
-                              href={card.divisionHref}
-                              onClick={(e) => e.stopPropagation()}
-                              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                                card.id === 'design'
-                                  ? 'bg-[#0EA5E9] text-white hover:bg-[#0284C7]'
-                                  : 'bg-white text-[#0C4A6E] hover:bg-[#BAE6FD]'
-                              }`}
-                            >
-                              <span>{isRTL ? `دخول قسم ${card.name}` : `Explore Division`}</span>
-                              <ArrowRight size={11} className="rtl:rotate-180" />
-                            </Link>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* 3D Viewport Container (Hidden on mobile if Card List mode is selected) */}
+            {/* 3D Viewport Container */}
             <div 
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className={`relative w-full h-[470px] min-[390px]:h-[490px] sm:h-[550px] items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none ${
-                mobileViewMode === 'cards' ? 'hidden lg:flex' : 'flex'
-              }`}
+              className="relative w-full flex h-[470px] min-[390px]:h-[490px] sm:h-[550px] items-center justify-center [perspective:1000px] sm:[perspective:1400px] select-none"
             >
               
               {/* Ambient 3D ground grid circle */}
@@ -952,34 +601,10 @@ export function TheWholeStack({ onOpenContact }: { onOpenContact?: () => void })
 
               </div>
 
-            </div>
 
-            {/* Clean Hint & Quick Link below 3D canvas */}
-            <div className={`mt-3 text-center flex flex-col items-center gap-2 ${mobileViewMode === 'cards' ? 'hidden lg:flex' : 'flex'}`}>
-              <p className="text-[11px] font-mono text-[#3F7FA8] flex items-center justify-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
-                <span>
-                  {activeLayer 
-                    ? (isRTL ? 'البطاقة في مقدمة الشاشة — اضغط عليها للعودة للحزمة' : 'Card in focus — tap card or (X) to return to stack')
-                    : (isRTL ? 'المس أي بطاقة لإبرازها في وضع 3D' : 'Touch any card to pop it out in 3D')
-                  }
-                </span>
-              </p>
-
-              {activeData && (
-                <Link
-                  href={activeData.divisionHref}
-                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0EA5E9] text-white hover:bg-[#0284C7] text-xs font-medium transition-all shadow-xs lg:hidden"
-                >
-                  <span>{isRTL ? `استكشف قسم ${activeData.name}` : `Explore ${activeData.name} Division`}</span>
-                  <ArrowUpRight size={13} />
-                </Link>
-              )}
             </div>
 
           </div>
-
-        </div>
 
       </div>
     </section>

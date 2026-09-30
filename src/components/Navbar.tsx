@@ -93,40 +93,24 @@ export function Navbar({ onOpenContact }: NavbarProps) {
       <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
         <div className="w-full max-w-6xl flex justify-between items-center pointer-events-auto">
           
-          {/* Brand Logomark + Wordmark */}
+          {/* Brand Logo + Wordmark */}
           <Link 
             href="/" 
-            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity bg-white/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/60 shadow-2xs group"
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity px-1 py-1.5 group"
           >
-            {/* Geometric S Logomark */}
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-              <defs>
-                <linearGradient id="satr-logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#0EA5E9" />
-                  <stop offset="100%" stopColor="#0369A1" />
-                </linearGradient>
-              </defs>
-              <rect width="32" height="32" rx="8" fill="url(#satr-logo-grad)" />
-              {/* Geometric S shape — angular, tech-inspired */}
-              <path d="M21.5 9.5H13.5C12.4 9.5 11.5 10.4 11.5 11.5V13.5C11.5 14.6 12.4 15.5 13.5 15.5H18.5C19.6 15.5 20.5 16.4 20.5 17.5V19.5C20.5 20.6 19.6 21.5 18.5 21.5H10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-              {/* Accent dots */}
-              <circle cx="22.5" cy="9.5" r="1.2" fill="white" opacity="0.85" />
-              <circle cx="9.5" cy="21.5" r="1.2" fill="white" opacity="0.85" />
-            </svg>
-            {/* Wordmark */}
-            <div className="flex flex-col leading-none">
-              <span className="text-[#0C4A6E] font-bold text-[15px] tracking-[0.16em]">SATR</span>
-              <span className="text-[9px] tracking-[0.08em] font-medium text-[#0EA5E9] mt-0.5">
-                {lang === 'en' ? 'DIGITAL STUDIO' : 'استوديو رقمي'}
-              </span>
+            {/* Code Brackets Logo */}
+            <div className="flex items-center gap-0.5 shrink-0">
+              <span className="text-[#0C4A6E] font-mono text-lg font-light leading-none">{'{'}</span>
+              <span className="w-[7px] h-[7px] rounded-full bg-[#0EA5E9] shadow-[0_0_8px_rgba(14,165,233,0.6)]" />
+              <span className="text-[#0C4A6E] font-mono text-lg font-light leading-none">{'}'}</span>
             </div>
+            {/* Wordmark */}
+            <span className="text-[#0C4A6E] font-bold text-[15px] tracking-[0.14em] leading-none">SATR</span>
           </Link>
 
-          {/* Desktop Glass Pill */}
+          {/* Desktop Nav */}
           <nav 
-            className={`hidden md:flex items-center gap-5 py-1.5 px-2 ps-5 glass-pill transition-all duration-300 ${
-              scrolled ? 'shadow-[0_12px_30px_-10px_rgba(12,74,110,0.25)] bg-[rgba(255,255,255,0.88)]' : ''
-            }`}
+            className={`hidden md:flex items-center gap-5 py-1.5 px-2 ps-5 transition-all duration-300`}
           >
             <ul className="flex items-center gap-6 text-sm font-normal text-[#0C4A6E]">
               <li>
@@ -154,13 +138,13 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             {/* Language Switch */}
             <button 
               onClick={toggleLanguage}
-              className="text-xs font-medium text-[#0C4A6E] border border-[#0EA5E9]/30 hover:border-[#0EA5E9] hover:bg-[#0EA5E9]/10 px-3 py-1 rounded-full transition-all cursor-pointer"
+              className="text-xs font-medium text-[#0C4A6E] hover:text-[#0EA5E9] px-3 py-1 transition-all cursor-pointer"
               title="Switch Language"
             >
               {t('nav.switch')}
             </button>
 
-            {/* Primary Navy CTA */}
+            {/* Transparent Sleek CTA */}
             <Link
               href="/contact"
               onClick={(e) => {
@@ -169,17 +153,17 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                   onOpenContact();
                 }
               }}
-              className="btn-navy group"
+              className="px-4 py-2 rounded-full border border-[#0C4A6E]/30 hover:border-[#0EA5E9] text-[#0C4A6E] hover:text-[#0EA5E9] text-xs font-medium transition-all bg-transparent cursor-pointer group inline-flex items-center gap-1.5"
             >
               <span>{t('nav.cta')}</span>
             </Link>
           </nav>
 
           {/* Mobile Bar Controls */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-1.5 md:hidden">
             <button 
               onClick={toggleLanguage}
-              className="glass-pill px-3 py-1.5 text-xs font-semibold text-[#0C4A6E] border border-[#7DD3FC]/80 shadow-2xs cursor-pointer flex items-center gap-1 active:scale-95 transition-transform"
+              className="px-2.5 py-1.5 text-xs font-semibold text-[#0C4A6E] hover:text-[#0EA5E9] cursor-pointer flex items-center gap-1 active:scale-95 transition-all bg-transparent"
             >
               <Globe size={13} className="text-[#0EA5E9]" />
               <span>{t('nav.switch')}</span>
@@ -187,10 +171,10 @@ export function Navbar({ onOpenContact }: NavbarProps) {
 
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`glass-pill w-10 h-10 text-[#0C4A6E] flex items-center justify-center border transition-all duration-300 cursor-pointer shadow-2xs active:scale-95 ${
+              className={`w-9 h-9 text-[#0C4A6E] hover:text-[#0EA5E9] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-95 bg-transparent ${
                 mobileMenuOpen 
-                  ? 'border-[#0EA5E9] bg-white text-[#0EA5E9] rotate-90 shadow-[0_0_15px_rgba(14,165,233,0.3)]' 
-                  : 'border-[#7DD3FC]/80'
+                  ? 'text-[#0EA5E9] rotate-90' 
+                  : ''
               }`}
               aria-label="Toggle menu"
             >
@@ -228,25 +212,13 @@ export function Navbar({ onOpenContact }: NavbarProps) {
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center gap-2.5"
             >
-              {/* Geometric S Logomark (Mobile) */}
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                <defs>
-                  <linearGradient id="satr-logo-grad-mobile" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#0EA5E9" />
-                    <stop offset="100%" stopColor="#0369A1" />
-                  </linearGradient>
-                </defs>
-                <rect width="32" height="32" rx="8" fill="url(#satr-logo-grad-mobile)" />
-                <path d="M21.5 9.5H13.5C12.4 9.5 11.5 10.4 11.5 11.5V13.5C11.5 14.6 12.4 15.5 13.5 15.5H18.5C19.6 15.5 20.5 16.4 20.5 17.5V19.5C20.5 20.6 19.6 21.5 18.5 21.5H10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                <circle cx="22.5" cy="9.5" r="1.2" fill="white" opacity="0.85" />
-                <circle cx="9.5" cy="21.5" r="1.2" fill="white" opacity="0.85" />
-              </svg>
-              <div className="flex flex-col leading-none">
-                <span className="font-bold text-sm tracking-[0.16em] text-[#0C4A6E]">SATR</span>
-                <span className="text-[9px] tracking-[0.08em] font-medium text-[#0EA5E9] mt-0.5">
-                  {lang === 'ar' ? 'استوديو رقمي' : 'DIGITAL STUDIO'}
-                </span>
+              {/* Code Brackets Logo (Mobile) */}
+              <div className="flex items-center gap-0.5 shrink-0">
+                <span className="text-[#0C4A6E] font-mono text-xl font-light leading-none">{'{'}</span>
+                <span className="w-2 h-2 rounded-full bg-[#0EA5E9] shadow-[0_0_8px_rgba(14,165,233,0.6)]" />
+                <span className="text-[#0C4A6E] font-mono text-xl font-light leading-none">{'}'}</span>
               </div>
+              <span className="font-bold text-base tracking-[0.14em] text-[#0C4A6E] leading-none">SATR</span>
             </Link>
 
             <button

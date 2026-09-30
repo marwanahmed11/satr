@@ -49,7 +49,7 @@ export default function ContactPage() {
     'Flexible',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim()) {
       setErrorMsg(
@@ -73,6 +73,16 @@ export default function ContactPage() {
     const stored = JSON.parse(localStorage.getItem('satr_contact_leads') || '[]');
     stored.push(fullLead);
     localStorage.setItem('satr_contact_leads', JSON.stringify(stored));
+
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullLead),
+      });
+    } catch (err) {
+      console.error('Contact form submission error:', err);
+    }
   };
 
   return (

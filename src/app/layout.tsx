@@ -10,13 +10,33 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://satr.tech'),
   title: "SATR — Built from the first line",
-  description: "SATR designs and engineers websites, mobile apps, SaaS platforms, custom software and AI for ambitious companies.",
+  description: "SATR designs and engineers websites, mobile apps, SaaS platforms, custom software, and AI for ambitious companies.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "SATR — Built from the first line",
     description: "One partner. Every digital layer. SATR designs, builds and scales websites, mobile apps, SaaS, and AI systems.",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "SATR — Built from the first line",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SATR — Built from the first line",
+    description: "One partner. Every digital layer. SATR designs, builds and scales websites, mobile apps, SaaS, and AI systems.",
+    images: ["/og-image.svg"],
   },
 };
 
