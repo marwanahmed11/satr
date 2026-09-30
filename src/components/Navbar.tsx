@@ -93,16 +93,33 @@ export function Navbar({ onOpenContact }: NavbarProps) {
       <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
         <div className="w-full max-w-6xl flex justify-between items-center pointer-events-auto">
           
-          {/* Brand Wordmark */}
+          {/* Brand Logomark + Wordmark */}
           <Link 
             href="/" 
-            className="text-[#0C4A6E] font-medium text-lg tracking-[0.18em] flex items-center gap-2 hover:opacity-90 transition-opacity bg-white/70 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/60 shadow-2xs"
+            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity bg-white/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/60 shadow-2xs group"
           >
-            <span className="font-bold tracking-wider">SATR</span>
-            <span className="h-3 w-px bg-[#BAE6FD]" />
-            <span className="text-xs tracking-normal font-normal text-[#0EA5E9]">
-              {lang === 'en' ? 'سطر' : 'SATR'}
-            </span>
+            {/* Geometric S Logomark */}
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+              <defs>
+                <linearGradient id="satr-logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#0EA5E9" />
+                  <stop offset="100%" stopColor="#0369A1" />
+                </linearGradient>
+              </defs>
+              <rect width="32" height="32" rx="8" fill="url(#satr-logo-grad)" />
+              {/* Geometric S shape — angular, tech-inspired */}
+              <path d="M21.5 9.5H13.5C12.4 9.5 11.5 10.4 11.5 11.5V13.5C11.5 14.6 12.4 15.5 13.5 15.5H18.5C19.6 15.5 20.5 16.4 20.5 17.5V19.5C20.5 20.6 19.6 21.5 18.5 21.5H10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              {/* Accent dots */}
+              <circle cx="22.5" cy="9.5" r="1.2" fill="white" opacity="0.85" />
+              <circle cx="9.5" cy="21.5" r="1.2" fill="white" opacity="0.85" />
+            </svg>
+            {/* Wordmark */}
+            <div className="flex flex-col leading-none">
+              <span className="text-[#0C4A6E] font-bold text-[15px] tracking-[0.16em]">SATR</span>
+              <span className="text-[9px] tracking-[0.08em] font-medium text-[#0EA5E9] mt-0.5">
+                {lang === 'en' ? 'DIGITAL STUDIO' : 'استوديو رقمي'}
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Glass Pill */}
@@ -209,20 +226,25 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             <Link 
               href="/" 
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2.5"
             >
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0EA5E9] to-[#0284C7] text-white font-bold text-xs flex items-center justify-center shadow-xs">
-                S
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-sm tracking-wider text-[#0C4A6E]">SATR</span>
-                  <span className="text-[10px] font-mono text-[#0EA5E9] px-1.5 py-0.5 rounded-full bg-[#E0F2FE]">
-                    STUDIO
-                  </span>
-                </div>
-                <span className="text-[10px] text-[#3F7FA8] block leading-none">
-                  {lang === 'ar' ? 'معمارية الحلول الرقمية' : 'Digital Architecture'}
+              {/* Geometric S Logomark (Mobile) */}
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <defs>
+                  <linearGradient id="satr-logo-grad-mobile" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#0EA5E9" />
+                    <stop offset="100%" stopColor="#0369A1" />
+                  </linearGradient>
+                </defs>
+                <rect width="32" height="32" rx="8" fill="url(#satr-logo-grad-mobile)" />
+                <path d="M21.5 9.5H13.5C12.4 9.5 11.5 10.4 11.5 11.5V13.5C11.5 14.6 12.4 15.5 13.5 15.5H18.5C19.6 15.5 20.5 16.4 20.5 17.5V19.5C20.5 20.6 19.6 21.5 18.5 21.5H10.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                <circle cx="22.5" cy="9.5" r="1.2" fill="white" opacity="0.85" />
+                <circle cx="9.5" cy="21.5" r="1.2" fill="white" opacity="0.85" />
+              </svg>
+              <div className="flex flex-col leading-none">
+                <span className="font-bold text-sm tracking-[0.16em] text-[#0C4A6E]">SATR</span>
+                <span className="text-[9px] tracking-[0.08em] font-medium text-[#0EA5E9] mt-0.5">
+                  {lang === 'ar' ? 'استوديو رقمي' : 'DIGITAL STUDIO'}
                 </span>
               </div>
             </Link>

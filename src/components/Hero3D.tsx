@@ -17,155 +17,250 @@ export function Hero3D() {
     let width = container.clientWidth;
     let height = container.clientHeight;
 
-    // Optimized WebGLRenderer: capped DPR to 1.5 for ultra-fast GPU fillrate and zero stutter
+    // --- Renderer ---
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
       alpha: true,
       powerPreference: 'high-performance',
-      precision: 'mediump', // significantly lighter on mobile and integrated GPUs
     });
-    
-    // Balanced pixel ratio: crisp visuals without 4x Retina GPU penalty
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(width, height);
     renderer.setClearColor(0x000000, 0);
-    
-    // Proper color space & filmic tone mapping for radiant, luminous sky colors
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.15;
 
+    // --- Scene & Camera ---
     const scene = new THREE.Scene();
-    const fov = 40;
-    const cz = 9;
+    const fov = 45;
+    const cameraZ = 7;
     const camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 100);
-    camera.position.set(0, 0, cz);
+    camera.position.set(0, 0, cameraZ);
 
-    // Enhanced radiant lighting: eliminates muddy dark plastic look
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbae6fd, 1.4);
-    scene.add(hemiLight);
+    // --- Lighting ---
+    const ambientLight = new THREE.AmbientLight(0xbae6fd, 0.4);
+    scene.add(ambientLight);
 
-    // Main key light
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.3);
-    dirLight.position.set(5, 7, 7);
-    scene.add(dirLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    keyLight.position.set(5, 5, 5);
+    scene.add(keyLight);
 
-    // Front-fill soft light
-    const frontLight = new THREE.DirectionalLight(0xbae6fd, 0.8);
-    frontLight.position.set(-3, 2, 6);
-    scene.add(frontLight);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+    rimLight.position.set(-4, -2, 3);
+    scene.add(rimLight);
 
-    // Vibrant sky accent point light
-    const pointLight = new THREE.PointLight(0x38bdf8, 2.0, 30);
-    pointLight.position.set(1, -2, 4);
-    scene.add(pointLight);
-
-    // Main sculpture group
-    const group = new THREE.Group();
-    scene.add(group);
+    // --- Globe Group ---
+    const globeGroup = new THREE.Group();
+    scene.add(globeGroup);
 
     const updateGroupPosition = () => {
-      const vh = Math.tan((fov * Math.PI) / 360) * cz;
-      const vw = vh * (width / height);
       if (window.innerWidth <= 900) {
-        group.position.set(0, 0, -2);
-        group.scale.set(0.65, 0.65, 0.65);
+        globeGroup.position.set(0, 0.2, 0);
+        globeGroup.scale.setScalar(0.7);
       } else {
-        group.position.set(vw * 0.44, 0.35, -0.2);
-        group.scale.set(1, 1, 1);
+        const vh = Math.tan((fov * Math.PI) / 360) * cameraZ;
+        const vw = vh * (width / height);
+        globeGroup.position.set(vw * 0.38, 0.1, 0);
+        globeGroup.scale.setScalar(1);
       }
     };
     updateGroupPosition();
 
-    // CatmullRomCurve3 coordinates exactly from brief
-    const points = [
-      new THREE.Vector3(-2.4, -1.6, 0.2),
-      new THREE.Vector3(-1.4, 0.5, 1.1),
-      new THREE.Vector3(-0.2, -0.8, -0.6),
-      new THREE.Vector3(0.8, 1.3, 0.6),
-      new THREE.Vector3(1.8, -0.3, 1.2),
-      new THREE.Vector3(2.4, 1.4, -0.4),
-      new THREE.Vector3(1.5, 2.2, -1.2),
-    ];
-    const curve = new THREE.CatmullRomCurve3(points);
+    const GLOBE_RADIUS = 2.0;
 
-    // OPTIMIZATION: 160 segments x 20 radial (62% fewer polygons than 280x30, identical smooth silhouette)
-    const tubeGeo = new THREE.TubeGeometry(curve, 160, 0.17, 20, false);
-    
-    // High-performance Standard material with subtle emissive boost so it stays vibrant and never turns dark
-    const tubeMat = new THREE.MeshStandardMaterial({
+    // --- Wireframe Sphere (Primary Globe) ---
+    const wireGeo = new THREE.IcosahedronGeometry(GLOBE_RADIUS, 3);
+    const wireMat = new THREE.MeshBasicMaterial({
       color: 0x0ea5e9,
-      roughness: 0.12,
-      metalness: 0.15,
-      emissive: 0x0369a1,
-      emissiveIntensity: 0.22,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.12,
     });
-    const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
-    group.add(tubeMesh);
+    const wireGlobe = new THREE.Mesh(wireGeo, wireMat);
+    globeGroup.add(wireGlobe);
 
-    // Draw-on setup
-    const totalIndices = tubeGeo.index ? tubeGeo.index.count : tubeGeo.attributes.position.count;
-    let drawnCount = prefersReducedMotion ? totalIndices : 0;
-    let isDrawComplete = prefersReducedMotion;
-    tubeGeo.setDrawRange(0, drawnCount);
-
-    // White gleaming pearl (sphere 24x24 for high speed)
-    const pearlGeo = new THREE.SphereGeometry(0.28, 24, 24);
-    const pearlMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.08,
-      metalness: 0.05,
-      emissive: 0xffffff,
-      emissiveIntensity: 0.25,
+    // --- Secondary inner wireframe for depth ---
+    const innerWireGeo = new THREE.IcosahedronGeometry(GLOBE_RADIUS * 0.92, 2);
+    const innerWireMat = new THREE.MeshBasicMaterial({
+      color: 0x7dd3fc,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.06,
     });
-    const pearlMesh = new THREE.Mesh(pearlGeo, pearlMat);
-    group.add(pearlMesh);
+    const innerWireGlobe = new THREE.Mesh(innerWireGeo, innerWireMat);
+    globeGroup.add(innerWireGlobe);
 
-    // Navy torus ring (-2.1, 1.6, -0.8) with glossy navy depth
-    const ringGeo = new THREE.TorusGeometry(0.62, 0.06, 12, 48);
-    const ringMat = new THREE.MeshStandardMaterial({
-      color: 0x0c4a6e,
-      roughness: 0.14,
-      metalness: 0.4,
-      emissive: 0x082f49,
-      emissiveIntensity: 0.15,
-    });
-    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-    ringMesh.position.set(-2.1, 1.6, -0.8);
-    group.add(ringMesh);
+    // --- Connection Nodes (glowing dots on globe surface) ---
+    const nodeCount = 60;
+    const nodePositions: THREE.Vector3[] = [];
+    const nodeMeshes: THREE.Mesh[] = [];
 
-    // 4 Floating Glass Orbs: luminous, frosted, shimmering sky colors
-    const sphereDefs = [
-      { pos: [-2.8, -0.3, -1.4], r: 0.36, color: 0xbae6fd, emissive: 0x7dd3fc, opacity: 0.85 },
-      { pos: [2.7, -1.5, -0.6], r: 0.46, color: 0xe0f2fe, emissive: 0xbae6fd, opacity: 0.88 },
-      { pos: [0.3, 2.1, -1.8], r: 0.22, color: 0x7dd3fc, emissive: 0x38bdf8, opacity: 0.95 },
-      { pos: [1.0, -1.9, 0.6], r: 0.17, color: 0x0369a1, emissive: 0x0284c7, opacity: 0.95 },
+    const nodeGeo = new THREE.SphereGeometry(0.035, 8, 8);
+
+    // Golden spiral distribution for even placement
+    for (let i = 0; i < nodeCount; i++) {
+      const y = 1 - (i / (nodeCount - 1)) * 2; // -1 to 1
+      const radiusAtY = Math.sqrt(1 - y * y);
+      const theta = ((Math.PI * (1 + Math.sqrt(5))) * i);
+
+      const pos = new THREE.Vector3(
+        Math.cos(theta) * radiusAtY * GLOBE_RADIUS,
+        y * GLOBE_RADIUS,
+        Math.sin(theta) * radiusAtY * GLOBE_RADIUS,
+      );
+      nodePositions.push(pos);
+
+      // Vary node brightness
+      const brightness = 0.5 + Math.random() * 0.5;
+      const nodeMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color().setHSL(0.55, 0.85, 0.5 + brightness * 0.35),
+        transparent: true,
+        opacity: 0.7 + Math.random() * 0.3,
+      });
+
+      const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
+      nodeMesh.position.copy(pos);
+      nodeMesh.userData = {
+        baseScale: 0.6 + Math.random() * 0.8,
+        pulsePhase: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.8 + Math.random() * 1.5,
+      };
+      nodeMesh.scale.setScalar(nodeMesh.userData.baseScale);
+      globeGroup.add(nodeMesh);
+      nodeMeshes.push(nodeMesh);
+    }
+
+    // --- Connection Lines (arcs between nearby nodes) ---
+    const connectionLines: THREE.Line[] = [];
+    const maxConnections = 80;
+    let connectionCount = 0;
+
+    // Connect nodes that are within a certain distance
+    const connectionThreshold = GLOBE_RADIUS * 1.2;
+    for (let i = 0; i < nodeCount && connectionCount < maxConnections; i++) {
+      for (let j = i + 1; j < nodeCount && connectionCount < maxConnections; j++) {
+        const dist = nodePositions[i].distanceTo(nodePositions[j]);
+        if (dist < connectionThreshold && Math.random() > 0.4) {
+          // Create curved arc between points
+          const mid = new THREE.Vector3()
+            .addVectors(nodePositions[i], nodePositions[j])
+            .multiplyScalar(0.5);
+          // Push midpoint outward for arc effect
+          mid.normalize().multiplyScalar(GLOBE_RADIUS * 1.08);
+
+          const curve = new THREE.QuadraticBezierCurve3(
+            nodePositions[i],
+            mid,
+            nodePositions[j],
+          );
+
+          const curvePoints = curve.getPoints(16);
+          const lineGeo = new THREE.BufferGeometry().setFromPoints(curvePoints);
+          const lineMat = new THREE.LineBasicMaterial({
+            color: 0x38bdf8,
+            transparent: true,
+            opacity: 0.08 + Math.random() * 0.08,
+          });
+          const line = new THREE.Line(lineGeo, lineMat);
+          globeGroup.add(line);
+          connectionLines.push(line);
+          connectionCount++;
+        }
+      }
+    }
+
+    // --- Orbiting Data Arcs (3 orbital rings) ---
+    const orbitRings: THREE.Line[] = [];
+    const orbitConfigs = [
+      { radius: GLOBE_RADIUS * 1.18, tiltX: 1.2, tiltZ: 0.3, color: 0x0ea5e9, opacity: 0.18, speed: 0.15 },
+      { radius: GLOBE_RADIUS * 1.30, tiltX: 0.5, tiltZ: 1.0, color: 0x7dd3fc, opacity: 0.12, speed: -0.10 },
+      { radius: GLOBE_RADIUS * 1.45, tiltX: 0.8, tiltZ: -0.6, color: 0x38bdf8, opacity: 0.09, speed: 0.08 },
     ];
 
-    const floatingSpheres: THREE.Mesh[] = [];
-    sphereDefs.forEach((def) => {
-      const sGeo = new THREE.SphereGeometry(def.r, 20, 20);
-      const sMat = new THREE.MeshStandardMaterial({
-        color: def.color,
-        roughness: 0.1,
-        metalness: 0.1,
+    orbitConfigs.forEach((cfg) => {
+      // Create a partial arc (not a full circle) for a data-stream look
+      const arcCurve = new THREE.EllipseCurve(
+        0, 0,
+        cfg.radius, cfg.radius,
+        0, Math.PI * 1.5, // 270-degree arc
+        false, 0
+      );
+      const arcPoints2D = arcCurve.getPoints(80);
+      const arcPoints3D = arcPoints2D.map(p => new THREE.Vector3(p.x, p.y, 0));
+
+      const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPoints3D);
+      const arcMat = new THREE.LineBasicMaterial({
+        color: cfg.color,
         transparent: true,
-        opacity: def.opacity,
-        emissive: def.emissive,
-        emissiveIntensity: 0.2,
+        opacity: cfg.opacity,
       });
-      const sMesh = new THREE.Mesh(sGeo, sMat);
-      sMesh.position.set(def.pos[0], def.pos[1], def.pos[2]);
-      sMesh.userData = { initialY: def.pos[1], phase: Math.random() * Math.PI * 2 };
-      group.add(sMesh);
-      floatingSpheres.push(sMesh);
+      const arcLine = new THREE.Line(arcGeo, arcMat);
+      arcLine.rotation.x = cfg.tiltX;
+      arcLine.rotation.z = cfg.tiltZ;
+      arcLine.userData = { speed: cfg.speed };
+      globeGroup.add(arcLine);
+      orbitRings.push(arcLine);
+
+      // Add a small bright dot at the arc's leading edge
+      const dotGeo = new THREE.SphereGeometry(0.04, 6, 6);
+      const dotMat = new THREE.MeshBasicMaterial({
+        color: cfg.color,
+        transparent: true,
+        opacity: 0.9,
+      });
+      const dotMesh = new THREE.Mesh(dotGeo, dotMat);
+      // Position at the end of the arc
+      const lastPt = arcPoints3D[arcPoints3D.length - 1];
+      dotMesh.position.copy(lastPt);
+      arcLine.add(dotMesh);
     });
 
-    // Zero-allocation vector for tip tracking
-    const tipVector = new THREE.Vector3();
+    // --- Particle Atmosphere (subtle floating dust) ---
+    const particleCount = 200;
+    const particlePositions = new Float32Array(particleCount * 3);
+    const particleOpacities = new Float32Array(particleCount);
 
-    // Mouse movement damping
+    for (let i = 0; i < particleCount; i++) {
+      // Distribute in a spherical shell around the globe
+      const phi = Math.random() * Math.PI * 2;
+      const cosTheta = Math.random() * 2 - 1;
+      const sinTheta = Math.sqrt(1 - cosTheta * cosTheta);
+      const r = GLOBE_RADIUS * (1.3 + Math.random() * 1.2);
+
+      particlePositions[i * 3] = r * sinTheta * Math.cos(phi);
+      particlePositions[i * 3 + 1] = r * cosTheta;
+      particlePositions[i * 3 + 2] = r * sinTheta * Math.sin(phi);
+      particleOpacities[i] = 0.15 + Math.random() * 0.35;
+    }
+
+    const particleGeo = new THREE.BufferGeometry();
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+    const particleMat = new THREE.PointsMaterial({
+      color: 0x7dd3fc,
+      size: 0.02,
+      transparent: true,
+      opacity: 0.4,
+      sizeAttenuation: true,
+      depthWrite: false,
+    });
+
+    const particles = new THREE.Points(particleGeo, particleMat);
+    globeGroup.add(particles);
+
+    // --- Glow Halo (large transparent sphere) ---
+    const glowGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.08, 32, 32);
+    const glowMat = new THREE.MeshBasicMaterial({
+      color: 0x0ea5e9,
+      transparent: true,
+      opacity: 0.03,
+      side: THREE.BackSide,
+    });
+    const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+    globeGroup.add(glowMesh);
+
+    // --- Mouse Interaction ---
     let targetRotY = 0;
     let targetRotX = 0;
 
@@ -173,12 +268,12 @@ export function Hero3D() {
       if (window.innerWidth <= 900 || prefersReducedMotion) return;
       const mouseX = e.clientX / window.innerWidth - 0.5;
       const mouseY = e.clientY / window.innerHeight - 0.5;
-      targetRotY = mouseX * 0.6;
-      targetRotX = mouseY * 0.38;
+      targetRotY = mouseX * 0.5;
+      targetRotX = mouseY * 0.3;
     };
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    // Resize handler
+    // --- Resize ---
     const handleResize = () => {
       if (!container) return;
       width = container.clientWidth;
@@ -190,7 +285,7 @@ export function Hero3D() {
     };
     window.addEventListener('resize', handleResize, { passive: true });
 
-    // Viewport intersection observer: immediately freezes rendering when scrolled away
+    // --- Visibility Observer ---
     let isVisible = true;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -200,7 +295,7 @@ export function Hero3D() {
     );
     observer.observe(container);
 
-    // Animation Loop with delta time clamping
+    // --- Animation ---
     let clock = 0;
     let animId: number;
     let lastTime = performance.now();
@@ -211,43 +306,37 @@ export function Hero3D() {
 
       const delta = Math.min((currentTime - lastTime) / 1000, 0.05);
       lastTime = currentTime;
-      clock += delta * 1.2;
-
-      // Draw-on: smoothly increments and freezes once complete (no memory/GPU bandwidth waste)
-      if (!isDrawComplete) {
-        drawnCount += Math.ceil(totalIndices * delta * 0.7);
-        if (drawnCount >= totalIndices) {
-          drawnCount = totalIndices;
-          isDrawComplete = true;
-          tubeGeo.setDrawRange(0, totalIndices);
-        } else {
-          const cleanStep = drawnCount - (drawnCount % 3);
-          tubeGeo.setDrawRange(0, cleanStep);
-        }
-      }
-
-      // Pearl smoothly follows tip
-      const progress = Math.min(1, Math.max(0.001, drawnCount / totalIndices));
-      curve.getPointAt(progress, tipVector);
-      pearlMesh.position.copy(tipVector);
+      clock += delta;
 
       if (!prefersReducedMotion) {
-        // Torus rotation
-        ringMesh.rotation.x = clock * 0.6;
-        ringMesh.rotation.y = clock * 0.35;
+        // Slow globe rotation
+        wireGlobe.rotation.y = clock * 0.12;
+        wireGlobe.rotation.x = Math.sin(clock * 0.05) * 0.08;
+        innerWireGlobe.rotation.y = clock * 0.08;
+        innerWireGlobe.rotation.x = Math.sin(clock * 0.04) * 0.06;
 
-        // Floating spheres bobbing
-        const sphereCount = floatingSpheres.length;
-        for (let i = 0; i < sphereCount; i++) {
-          const sph = floatingSpheres[i];
-          sph.position.y = sph.userData.initialY + Math.sin(clock * 1.3 + sph.userData.phase) * 0.14;
+        // Pulse connection nodes
+        for (let i = 0; i < nodeMeshes.length; i++) {
+          const node = nodeMeshes[i];
+          const { baseScale, pulsePhase, pulseSpeed } = node.userData;
+          const pulse = 1 + Math.sin(clock * pulseSpeed + pulsePhase) * 0.3;
+          node.scale.setScalar(baseScale * pulse);
         }
 
-        // Smooth mouse damping (0.05 per frame) + gentle idle sway
-        const idleY = Math.sin(clock * 0.45) * 0.1;
-        const idleX = Math.cos(clock * 0.35) * 0.06;
-        group.rotation.y += (targetRotY + idleY - group.rotation.y) * 0.05;
-        group.rotation.x += (targetRotX + idleX - group.rotation.x) * 0.05;
+        // Rotate orbit arcs
+        for (let i = 0; i < orbitRings.length; i++) {
+          orbitRings[i].rotation.y += orbitRings[i].userData.speed * delta;
+        }
+
+        // Rotate particles slowly
+        particles.rotation.y = clock * 0.03;
+        particles.rotation.x = Math.sin(clock * 0.02) * 0.05;
+
+        // Mouse-following with smooth damping + gentle idle sway
+        const idleY = Math.sin(clock * 0.25) * 0.06;
+        const idleX = Math.cos(clock * 0.2) * 0.04;
+        globeGroup.rotation.y += (targetRotY + idleY - globeGroup.rotation.y) * 0.03;
+        globeGroup.rotation.x += (targetRotX + idleX - globeGroup.rotation.x) * 0.03;
       }
 
       renderer.render(scene, camera);
@@ -255,26 +344,26 @@ export function Hero3D() {
 
     animId = requestAnimationFrame(animate);
 
+    // --- Cleanup ---
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
       observer.disconnect();
-      renderer.dispose();
-      tubeGeo.dispose();
-      tubeMat.dispose();
-      pearlGeo.dispose();
-      pearlMat.dispose();
-      ringGeo.dispose();
-      ringMat.dispose();
-      floatingSpheres.forEach((sph) => {
-        sph.geometry.dispose();
-        if (Array.isArray(sph.material)) {
-          sph.material.forEach((m) => m.dispose());
-        } else {
-          sph.material.dispose();
+
+      // Dispose all geometries and materials
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line || obj instanceof THREE.Points) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((m) => m.dispose());
+          } else {
+            obj.material?.dispose();
+          }
         }
       });
+
+      renderer.dispose();
     };
   }, []);
 
